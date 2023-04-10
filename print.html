@@ -1,0 +1,1897 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>PL/Rust Guide</title>
+        <meta name="robots" content="noindex" />
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="plrust.html">What is PL/Rust?</a></li><li class="chapter-item expanded affix "><li class="part-title">Installation</li><li class="chapter-item expanded "><a href="install-prerequisites.html"><strong aria-hidden="true">1.</strong> Install Prerequisites</a></li><li class="chapter-item expanded "><a href="install-plrust.html"><strong aria-hidden="true">2.</strong> Install PL/Rust</a></li><li class="chapter-item expanded "><a href="update-plrust.html"><strong aria-hidden="true">3.</strong> Update PL/Rust</a></li><li class="chapter-item expanded affix "><li class="part-title">PL/Rust Usage</li><li class="chapter-item expanded "><a href="use-plrust.html"><strong aria-hidden="true">4.</strong> PL/Rust Functions and Arguments</a></li><li class="chapter-item expanded "><a href="data-types.html"><strong aria-hidden="true">5.</strong> Data types</a></li><li class="chapter-item expanded "><a href="built-in-functions.html"><strong aria-hidden="true">6.</strong> Built-in functions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="logging.html"><strong aria-hidden="true">6.1.</strong> Logging to PostgreSQL from PL/Rust</a></li><li class="chapter-item expanded "><a href="triggers.html"><strong aria-hidden="true">6.2.</strong> Triggers</a></li><li class="chapter-item expanded "><a href="spi.html"><strong aria-hidden="true">6.3.</strong> SPI</a></li></ol></li><li class="chapter-item expanded "><a href="trusted-untrusted.html"><strong aria-hidden="true">7.</strong> Trusted and Untrusted PL/Rust</a></li><li class="chapter-item expanded "><a href="config-pg.html"><strong aria-hidden="true">8.</strong> PostgreSQL configuration</a></li><li class="chapter-item expanded "><a href="rules-regulations.html"><strong aria-hidden="true">9.</strong> Rules and Regulations</a></li><li class="chapter-item expanded affix "><li class="part-title">PL/Rust Under the Hood</li><li class="chapter-item expanded "><a href="architecture.html"><strong aria-hidden="true">10.</strong> Architecture</a></li><li class="chapter-item expanded "><a href="designing-for-trust.html"><strong aria-hidden="true">11.</strong> Designing for Trust</a></li><li class="chapter-item expanded "><a href="config-lints.html"><strong aria-hidden="true">12.</strong> Lints</a></li><li class="chapter-item expanded "><a href="config-env-var.html"><strong aria-hidden="true">13.</strong> Environment variables</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">PL/Rust Guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="what-is-plrust"><a class="header" href="#what-is-plrust">What is PL/Rust?</a></h1>
+<blockquote>
+<p>This documentation is under development.</p>
+</blockquote>
+<p>PL/Rust is a loadable procedural language that enables writing PostgreSQL
+functions in the Rust programming language. These functions are compiled to
+native machine code. Unlike other procedural languages, PL/Rust functions are
+not interpreted.</p>
+<p>The top advantages of PL/Rust include writing natively-compiled functions to achieve the absolute best performance,
+access to Rust's large development ecosystem, and Rust's compile-time safety guarantees.</p>
+<p>PL/Rust is Open Source and <a href="https://github.com/tcdi/plrust">actively developed on GitHub</a>.</p>
+<h2 id="features"><a class="header" href="#features">Features</a></h2>
+<p>PL/Rust provides access to Postgres' Server Programming Interface (SPI) including dynamic queries, prepared
+statements, and cursors. It also provides safe Rust types over most of Postgres built-in data types, including (but
+not limited to), <code>TEXT</code>, <code>INT</code>, <code>BIGINT</code>, <code>NUMERIC</code>, <code>FLOAT</code>, <code>DOUBLE PRECISION</code>,
+<code>DATE</code>, <code>TIME</code>, etc.</p>
+<p>On <code>x86_64</code> and <code>aarch64</code> systems PL/Rust can be a &quot;trusted&quot; procedural language, assuming the proper compilation
+requirements are met. On other systems, it is perfectly usable as an &quot;untrusted&quot; language but cannot provide the
+same level of safety guarantees.</p>
+<h2 id="example-plrust-function"><a class="header" href="#example-plrust-function">Example PL/Rust function</a></h2>
+<p>The following example shows an example PL/Rust function to count the length of
+an input string. See <a href="./use-plrust.html">PL/Rust Functions and Arguments</a>
+for more examples.</p>
+<pre><code class="language-sql">CREATE FUNCTION strlen(name TEXT)
+    RETURNS int LANGUAGE plrust AS
+$$
+    Ok(Some(name.unwrap().len() as i32))
+$$;
+</code></pre>
+<p>Using the function is just like any other PostgreSQL function.</p>
+<pre><code class="language-sql">SELECT strlen('Hello, PL/Rust');
+</code></pre>
+<pre><code class="language-bash">┌────────┐
+│ strlen │
+╞════════╡
+│     14 │
+└────────┘
+</code></pre>
+<h2 id="built-on-pgx"><a class="header" href="#built-on-pgx">Built on pgx</a></h2>
+<p>PL/Rust itself is a <a href="https://github.com/tcdi/pgx"><code>pgx</code></a>-based Postgres extension.  Furthermore, each <code>LANGUAGE plrust</code> function are themselves mini-pgx extensions. <code>pgx</code>is a generalized framework for developing Postgres extensions with Rust.  Like this project, <code>pgx</code>
+is developed by <a href="https://www.tcdi.com">TCDI</a>.</p>
+<p>The following sections discuss PL/Rusts safety guarantees, configuration settings, and installation instructions.</p>
+<h1 id="general-safety-by-rust"><a class="header" href="#general-safety-by-rust">General Safety, by Rust</a></h1>
+<p>Quoted from the &quot;Rustonomicon&quot;:</p>
+<blockquote>
+<p>Safe Rust is the true Rust programming language. If all you do is write Safe Rust, you will never have to worry
+about type-safety or memory-safety. You will never endure a dangling pointer, a use-after-free, or any other kind
+of Undefined Behavior (a.k.a. UB).</p>
+</blockquote>
+<p>This is the universe in which PL/Rust functions live. If a PL/Rust function compiles it has these guarantees, by
+the Rust compiler, that it won't &quot;crash.&quot; This quality is important for natively-compiled code running in a
+production database.</p>
+<h2 id="what-about-unsafe"><a class="header" href="#what-about-unsafe">What about <code>unsafe</code>?</a></h2>
+<p>PL/Rust uses the Rust compiler itself to wholesale <strong>disallow</strong> the use of <code>unsafe</code> in user functions. If
+a <code>LANGUAGE plrust</code> function uses <code>unsafe</code> it won't compile.</p>
+<p>Generally, what this means is that PL/Rust functions cannot call <code>unsafe fn</code>s, cannot call <code>extern &quot;C&quot;</code>s into
+Postgres itself, and cannot dereference pointers.</p>
+<p>This is accomplished using Rust's built-in <code>#![forbid(unsafe_code)]</code> lint.</p>
+<p>3rd-party crate dependencies are allowed to use <code>unsafe</code>. We'll discuss this below.</p>
+<h2 id="what-about-pgx"><a class="header" href="#what-about-pgx">What about <code>pgx</code>?</a></h2>
+<p>If <code>pgx</code> is a &quot;generalized framework for developing Postgres extensions with Rust&quot;, and if PL/Rust user functions
+are themselves &quot;mini-pgx extensions&quot;, what prevents a <code>LANGUAGE plrust</code> function from using any part of <code>pgx</code>?</p>
+<p>The <a href="https://github.com/tcdi/plrust/tree/main/plrust-trusted-pgx"><code>plrust-trusted-pgx</code></a> crate does!
+The <code>plrust-trusted-pgx</code> crate is a tightly-controlled &quot;re-export crate&quot; on top of <code>pgx</code> that exposes the bare minimum necessary for
+PL/Rust user functions to compile along with the bare minimum, <strong>safe</strong> features of <code>pgx</code>.</p>
+<p>The crate is versioned independently to both <code>pgx</code> and <code>plrust</code> and is published on <a href="https://crates.io/crates/plrust-trusted-pgx">crates.io</a>.
+By default, the version a plrust user function will use is that of the one set in the project repository when plrust itself
+is compiled.  However, the <code>plrust.trusted_pgx_version</code> GUC can be set to specify a specific version.</p>
+<p>The intent is that <code>plrust-trusted-pgx</code> can evolve independently of both <code>pgx</code> and <code>plrust</code>.</p>
+<p>There are a few &quot;unsafe&quot; parts of <code>pgx</code> exposed through <code>plrust-trusted-pgx</code>, but PL/Rust's ability to block <code>unsafe</code>
+renders them useless by PL/Rust user functions.  <code>plrust-trusted-pgx</code>'s docs are available on <a href="https://docs.rs/plrust-trusted-pgx">docs.rs</a>.</p>
+<h2 id="what-about-rust-compiler-bugs"><a class="header" href="#what-about-rust-compiler-bugs">What about Rust compiler bugs?</a></h2>
+<p>PL/Rust uses its own <code>rustc</code> driver which enables it to apply custom lints to the user's <code>LANGUAGE plrust</code> function.
+In general, these lints will fail compilation if the user's code uses certain code idioms or patterns which we know to
+have &quot;I-Unsound&quot; issues.</p>
+<p>PL/Rust contains a small set of <a href="config-lints.html">lints</a> to block what the developers have deemed the most egregious &quot;I-Unsound&quot; Rust bugs.</p>
+<p>Should new Rust bugs be found, and detection lints are developed for PL/Rust, the lints can be applied to new user 
+function compilations along with ensuring that future function executions had those lints applied at compile time.</p>
+<p>Note that this is done on a best-effort basis, and does <em>not</em> provide a strong level of security — it's not a sandbox,
+and as such, it's likely that a skilled hostile attacker who is sufficiently motivated could find ways around it
+(PostgreSQL itself is not a particularly hardened codebase, after all). You should ensure such actors cannot execute SQL
+on your database, but to be clear: this is true regardless of whether or not PL/Rust is installed. Having said that, any
+issues found with our implementation will be taken seriously, and should be
+<a href="https://github.com/tcdi/plrust/blob/main/SECURITY.md">reported appropriately</a>.</p>
+<h2 id="trusted-with-postgrestd-on-linux-x86_64aarch64"><a class="header" href="#trusted-with-postgrestd-on-linux-x86_64aarch64">Trusted with <code>postgrestd</code> on Linux x86_64/aarch64</a></h2>
+<p>The &quot;trusted&quot; version of PL/Rust uses a unique fork of Rust's <code>std</code> entitled
+<a href="https://github.com/tcdi/postgrestd"><code>postgrestd</code></a> when compiling <code>LANGUAGE plrust</code> user functions. <code>postgrestd</code> is
+a specialized Rust compilation target which disallows access to the filesystem and the host operating system. The Install PL/Rust section outlines the steps required for
+<a href="/install-plrust.html#trusted-install">trusted install</a> of PL/Rust.
+Currently, <code>postgrestd</code> is only supported on Linux <code>x86_64</code> and <code>aarch64</code> platforms.</p>
+<p>When <code>plrust</code> user functions are compiled and linked against <code>postgrestd</code>, they are prohibited from using the
+filesystem, executing processes, and otherwise interacting with the host operating system.</p>
+<p>In order for PL/Rust to use <code>postgrestd</code>, its Rust compilation targets must be installed on the Postgres server.
+This happens via plrust's
+<a href="https://github.com/tcdi/plrust/blob/main/plrust/build"><code>plrust/build</code></a> script, which clones <code>postgrestd</code>, compiles it, by
+default, for both <code>x86_64</code> and <code>aarch64</code> architectures, and ultimately places a copy of the necessary libraries used by
+Rust for <code>std</code> into the appropriate &quot;sysroot&quot;, which is the location that <code>rustc</code> will look for building those
+libraries.</p>
+<h2 id="the-trusted-feature-flag"><a class="header" href="#the-trusted-feature-flag">The <code>trusted</code> Feature Flag</a></h2>
+<p>PL/Rust has a feature flag simply named <code>trusted</code>. When compiled with the <code>trusted</code> feature flag PL/Rust will
+<strong>always</strong> use the <code>postgrestd</code> targets when compiling user functions.
+Again, this is only supported on <code>x86_64</code> and <code>aarch64</code> Linux systems.
+<code>postgrestd</code> and the <code>trusted</code> feature flag are <strong>not</strong> supported on other platforms.
+As such, PL/Rust cannot be considered fully trusted on those platforms.</p>
+<p>If the <code>trusted</code> feature flag is not used when compiling PL/Rust, which is the default, then <code>postgrestd</code> is <strong>not</strong>
+used when compiling user functions, and while they'll still benefit from Rust's general compile-time safety
+checked, forced usage of the <code>plrust-trusted-pgx</code> crate, and PL/Rust's <code>unsafe</code> blocking, they will be able to access the
+filesystem and communicate with the host operating system, as the user running the connected Postgres backend
+(typically, this is a user named <code>postgres</code>).</p>
+<h1 id="plrust-is-also-a-cross-compiler"><a class="header" href="#plrust-is-also-a-cross-compiler">PL/Rust is also a Cross Compiler</a></h1>
+<p>In this day and age of sophisticated and flexible Postgres replication, along with cloud providers offering
+Postgres on, and replication to, disparate CPU architectures, it's important that plrust, since it stores the user
+function binary bytes in a database table, support running that function on a replicated Postgres server of a
+different CPU architecture.</p>
+<p><em>cross compilation has entered the chat</em></p>
+<p>By default, PL/Rust will not perform cross compilation. It must be installed
+and enabled through configuration.</p>
+<p>Configuring a <em>host</em> to properly cross compile is a thing that can take minimal effort to individual feats of
+heroic effort. Reading the (still in-progress) <a href="https://github.com/tcdi/pgx/blob/master/CROSS_COMPILE.md">pgx cross compile guide</a> 
+can help. Generally speaking, it's not too awful to setup on Debian-based Linux systems, such as Ubuntu. Basically,
+you install the &quot;cross compilation toolchain&quot; <code>apt</code> package for the <em>other</em> platform.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="install-plrust-prerequisites"><a class="header" href="#install-plrust-prerequisites">Install PL/Rust Prerequisites</a></h1>
+<p>These instructions explain how to install PL/Rust on a typical OS PostgreSQL
+installation installed using the OS' package manager. These instructions
+include steps for <a href="trusted-untrusted.html">trusted and untrusted</a>
+<code>plrust</code> and are tested using Ubuntu 22.04 and PostgreSQL 15.
+PostgreSQL 15 for this document is installed using <code>apt</code> using
+the <code>pgdg</code> repository.
+See the <a href="https://wiki.postgresql.org/wiki/Apt">PostgreSQL apt wiki page</a>
+for instructions.</p>
+<p>Steps to install PL/Rust:</p>
+<ul>
+<li>Prerequisites</li>
+<li>Install Rust</li>
+<li>Install pgx</li>
+<li>Install PL/Rust</li>
+<li>Create amazing things!</li>
+</ul>
+<h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
+<p>PL/Rust requires PostgreSQL and all prerequisites outlined for
+<a href="https://github.com/tcdi/pgx#system-requirements">pgx</a>
+are installed.
+Pay special attention to
+<a href="https://wiki.postgresql.org/wiki/Compile_and_Install_from_source_code">PostgreSQL's build dependencies</a>.</p>
+<h3 id="permissions"><a class="header" href="#permissions">Permissions</a></h3>
+<p>Installing PL/Rust with these instructions installs <code>rustc</code>, <code>pgx</code>,
+and <code>plrust</code> as the Linux <code>postgres</code> user.  The <code>postgres</code> user
+is created during the standard PostgreSQL installation via <code>apt</code>.
+For <code>pgx</code> to successfully install <code>plrust</code>, the <code>postgres</code>
+user needs ownership of the <code>extension</code> and <code>lib</code> directories.
+The standard Ubuntu locations are indicated below.</p>
+<pre><code class="language-bash">sudo chown postgres -R /usr/share/postgresql/15/extension/
+sudo chown postgres -R /usr/lib/postgresql/15/lib/
+</code></pre>
+<p>These permissions are later reset back to being owned by <code>root</code>
+in the <a href="install-plrust.html#reset-permissions">Reset Permissions</a> section.</p>
+<h2 id="install-rustc"><a class="header" href="#install-rustc">Install <code>rustc</code></a></h2>
+<p>Installing PL/Rust requires that the <code>rustc</code> compiler is available
+to the user installing it.
+Switch to the <code>postgres</code> Linux user and change into its home directory.</p>
+<pre><code class="language-bash">sudo su - postgres
+</code></pre>
+<p>The typically installation for <code>rustc</code> uses <code>curl</code> and <code>rustup</code>.
+If you want to install <code>rustc</code> without using <code>rustup</code> see the
+<a href="https://forge.rust-lang.org/infra/other-installation-methods.html">Other Rust installation methods</a>
+page.</p>
+<pre><code class="language-bash">curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+</code></pre>
+<p>The <code>rustup</code> installer prompts for an installation choice.  The
+default installation (1) should work for most use cases.</p>
+<pre><code class="language-bash">1) Proceed with installation (default)
+2) Customize installation
+3) Cancel installation
+</code></pre>
+<p>After installing rust, use <code>exit</code> to log out and back in to the <code>postgres</code>
+account.  This ensures your terminal is using the newly installed
+<code>rustc</code> installation.</p>
+<pre><code class="language-bash"># Log in  as postgres fresh with rustc installed
+exit
+sudo su - postgres
+</code></pre>
+<h3 id="clone-plrust-and-check-rust-version"><a class="header" href="#clone-plrust-and-check-rust-version">Clone <code>plrust</code> and check Rust version</a></h3>
+<p>PL/Rust is installed from source code using pgx.  This installation
+requires that pgx is compiled using a specific version of <code>rustc</code>.
+The <code>rustc</code> version required for PL/Rust is defined in the project's
+<a href="https://github.com/tcdi/plrust/blob/main/rust-toolchain.toml"><code>rust-toolchain.toml</code></a>.
+The steps below ensure the proper versions are used.</p>
+<p>Clone the <code>plrust</code> repo from GitHub and change into the <code>plrust/plrust</code>
+directory. Running <code>rustc -V</code> in this location is used to verify
+the version reported is by <code>rustc -V</code> is the version defined by PL/Rust.</p>
+<pre><code class="language-bash">git clone https://github.com/tcdi/plrust.git
+cd plrust/plrust
+rustc -V
+</code></pre>
+<p>The output from <code>rustc -V</code> should look similar to the following example.</p>
+<pre><code>rustc 1.67.1 (d5a82bbd2 2023-02-07)
+</code></pre>
+<p>Use <code>rustup default</code> to check that the explicit version of <code>rustc</code> is
+selected.
+You need to see the version number reported in by <code>rustc -V</code> in
+your <code>rustup default</code> output.</p>
+<pre><code class="language-bash">rustup default
+</code></pre>
+<p>The expected output is below.</p>
+<pre><code>1.67.1-x86_64-unknown-linux-gnu (default)
+</code></pre>
+<p>If <code>rustup default</code> returns a different version number or <code>stable</code>,
+set the default version as shown below and check that the output
+updates accordingly.</p>
+<pre><code class="language-bash">rustup default 1.67.1
+rustup default
+</code></pre>
+<h3 id="be-careful-with-rust-versions"><a class="header" href="#be-careful-with-rust-versions">Be careful with Rust versions</a></h3>
+<blockquote>
+<p><strong>WARNING!</strong> The <code>stable</code> version of <code>rustc</code> cannot be used to install Trusted PL/Rust.  This is the case even when the <code>stable</code> version is identical to the tagged version number, such as <code>1.67.1</code>.</p>
+</blockquote>
+<p>The above checks of <code>rustc -V</code> and <code>rustup default</code> are important to
+follow before installing pgx and PL/Rust.
+You must install <code>pgx</code> with the version of <code>rustc</code> that <code>plrust</code> expects
+in the <code>rust-toolchain.toml</code>.  Failing to do so will result in a
+mismatched version error in a subsequent step.</p>
+<p>A misconfigured <code>rustup default</code> results in
+errors when creating functions with trusted PL/Rust. The error can
+manifest as a problem in the <code>postgrestd</code> linking with the following error.
+This happens because Rust makes a distinction between the latest stable
+version of Rust, and the actual version of the stable release (e.g. 1.67.1),
+even when they refer to the same release.</p>
+<pre><code class="language-bash">Error loading target specification: Could not find specification for target &quot;x86_64-postgres-linux-gnu&quot;.
+</code></pre>
+<h2 id="install-pgx"><a class="header" href="#install-pgx">Install pgx</a></h2>
+<p>The PL/Rust extension is built and installed
+<a href="https://github.com/tcdi/pgx">using pgx</a>.
+Install pgx with the <code>--locked</code> option. This step takes a few
+minutes.</p>
+<pre><code class="language-bash">cargo install cargo-pgx --locked
+</code></pre>
+<p>Pgx needs to be initialized for use with the PostgreSQL installation.
+This is done using <code>pgx init</code>.  This step needs to know where your
+<code>pg_config</code> file is located at.  If you have a standard Ubuntu
+<code>apt</code> installation of PostgreSQL with a single version of PostgreSQL
+installed you can use the generic
+<code>/usr/bin/pg_config</code> path.</p>
+<pre><code class="language-bash">cargo pgx init --pg15 /usr/bin/pg_config
+</code></pre>
+<p>Output from <code>cargo pgx init</code> looks like the following example.
+You may notice it mentions information about a new data directory under your
+user's <code>~/.pgx/</code> directory. This <strong>does not replace</strong> your PostgreSQL instance's
+data directory. The <code>~/.pgx/data-15/</code> directory is there in case you run
+<code>cargo pgx run pg15</code>, which would use this custom data directory, not your installation's data directory.</p>
+<pre><code>   Validating /usr/bin/pg_config
+ Initializing data directory at /var/lib/postgresql/.pgx/data-15
+</code></pre>
+<p>The generic <code>pg_config</code> used above will not work
+for all installations, such as if you have both PostgreSQL 14 and 15
+installed on one instance.
+In these cases you should specify the exact <code>pg_config</code>
+file for your installation.</p>
+<pre><code class="language-bash">cargo pgx init --pg14 /usr/lib/postgresql/14/bin/pg_config
+</code></pre>
+<p>The instructions on this page have setup the prerequisite software required to
+install PL/Rust.  The next section, <a href="install-plrust.html">Install PL/Rust</a>,
+finishes the installation process.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="install-plrust"><a class="header" href="#install-plrust">Install PL/Rust</a></h1>
+<p>This section provides steps on how to proceed with installing PL/Rust.  There
+are three ways to install PL/Rust.
+Most users will want to install <a href="install-plrust.html#trusted-install">trusted PL/Rust</a>.</p>
+<ul>
+<li><a href="install-plrust.html#untrusted-install">Untrusted</a></li>
+<li><a href="install-plrust.html#trusted-install">Trusted</a></li>
+<li><a href="install-plrust.html#trusted-installation-plus-cross-compilation">Trusted plus cross compilation</a></li>
+</ul>
+<p>These instructions assume you have followed the <a href="install-prerequisites.html">Install Prerequisites</a>
+section and are logged in as the <code>postgres</code> Linux user.
+Install PL/Rust by following the installation steps under your method of choice
+below.  Then visit
+<a href="install-plrust.html#configure-and-restart-postgresql">the configuration subsection</a>
+and give <a href="install-plrust.html#try-it-out">PL/Rust a try</a>!</p>
+<h3 id="untrusted-install"><a class="header" href="#untrusted-install">Untrusted install</a></h3>
+<p>To install <strong>untrusted</strong> PL/Rust use <code>cargo pgx install</code>
+without <code>--features trusted</code>.  See the <a href="install-plrust.html#trusted-install">trusted install</a> if you
+wish to install the trusted PL/Rust instead.</p>
+<pre><code class="language-bash">cargo pgx install --release -c /usr/bin/pg_config
+</code></pre>
+<p>Continue on to <a href="install-plrust.html#configure-and-restart-postgresql">configuring PostgreSQL</a>
+for PL/Rust.</p>
+<h3 id="trusted-install"><a class="header" href="#trusted-install">Trusted install</a></h3>
+<p>The trusted installation requires <code>postgrestd</code> and a few additional
+Rust dependencies.  First install the additional dependencies.  This example
+uses <code>x86_64</code> and ensures the target is installed.  If you are using <code>aarch64</code>,
+update the command accordingly.</p>
+<pre><code class="language-bash">rustup component add llvm-tools-preview rustc-dev
+rustup target install x86_64-unknown-linux-gnu
+</code></pre>
+<p>Change into the <code>plrust/plrustc</code> directory to build <code>plrustc</code>.
+Move the generated binary into <code>~/.cargo/bin/</code>.</p>
+<pre><code class="language-bash">cd ~/plrust/plrustc
+./build.sh
+mv ~/plrust/build/bin/plrustc ~/.cargo/bin/
+</code></pre>
+<blockquote>
+<p>Note:  The path <code>~/.cargo/bin/</code> is the default path used by PL/Rust. This can be overridden using <code>plrust.PATH_override</code>, see <a href="./config-pg.html">PostgreSQL Config</a>.</p>
+</blockquote>
+<p>Change into the <code>plrust/plrust/</code> directory and run the build process to
+install <code>postgrestd</code>.  This example is for installing PL/Rust on <code>x86_64</code>
+architecture, switch to <code>aarch64</code> if using that architecture instead.</p>
+<pre><code class="language-bash">cd ~/plrust/plrust
+PG_VER=15 \
+    STD_TARGETS=&quot;x86_64-postgres-linux-gnu &quot; \
+    ./build
+</code></pre>
+<p>The above step can take quite a few minutes to
+install <code>postgrestd</code> and run the associated tests.
+It is not uncommon to see output like the following during the
+test process.</p>
+<pre><code class="language-bash">test tests::tests::pg_plrust_aggregate has been running for over 60 seconds
+</code></pre>
+<p>The final step for trusted PL/Rust installation is to use
+<code>cargo pgx install</code> with <code>--features trusted</code>.</p>
+<pre><code class="language-bash">cargo pgx install --release --features trusted -c /usr/bin/pg_config
+</code></pre>
+<p>Continue on to <a href="install-plrust.html#configure-and-restart-postgresql">configuring PostgreSQL</a>
+for PL/Rust.</p>
+<h3 id="choosing-a-different-plrust-trusted-pgx-dependency-at-compile-time"><a class="header" href="#choosing-a-different-plrust-trusted-pgx-dependency-at-compile-time">Choosing a different <code>plrust-trusted-pgx</code> dependency at compile time</a></h3>
+<p>When a user creates a <code>LANGUAGE plrust</code> function, PL/Rust first generates a small Cargo crate for the function.  That
+crate has a dependency on <code>plrust-trusted-pgx</code>.  By default, <code>plrust-trusted-pgx</code> comes from crates.io, using the same 
+version as PL/Rust itself.</p>
+<p>It is possible to override this dependency when compiling PL/Rust itself so that PL/Rust will use a different 
+<code>plrust-trusted-pgx</code> crate.  To do this, set an environment variable named <code>PLRUST_TRUSTED_PGX_OVERRIDE</code> to the
+full &quot;Cargo.toml&quot;-compatible dependency line, like so:</p>
+<pre><code class="language-shell">PLRUST_TRUSTED_PGX_OVERRIDE=&quot;pgx = { path = '~/code/plrust/plrust-trusted-pgx', package='plrust-trusted-pgx' }&quot; \
+cargo pgx install --release --features trusted -c /usr/bin/pg_config
+</code></pre>
+<p>This will instead compile all user functions using this specific <code>plrust-trusted-pgx</code>, not the default on crates.io.
+Generally, changing the <code>plrust-trusted-pgx</code> dependency is only useful for PL/Rust development and CI, not for production 
+deployments, but is worth mentioning as the environment variable <em>will</em> influence how user functions are compiled.</p>
+<p>It may also be useful for providing a local patch to <code>plrust-trusted-pgx</code> if such a need were to arise.</p>
+<h3 id="trusted-installation-plus-cross-compilation"><a class="header" href="#trusted-installation-plus-cross-compilation">Trusted installation plus cross compilation</a></h3>
+<p>Adding cross compilation support to PL/Rust requires a few minor changes to the
+<a href="install-plrust.html#trusted-install">trusted installation</a> steps above.  This section only highlights
+the changes to make for cross compile support, not the full process.</p>
+<p>As a Linux user with <code>sudo</code> access, install these additional prerequisites.</p>
+<pre><code class="language-bash">sudo apt install crossbuild-essential-arm64 crossbuild-essential-amd64
+</code></pre>
+<p>The normal trusted install uses <code>rustup</code> to install one architecture target.
+Cross compilation support requires both.</p>
+<pre><code class="language-bash">rustup component add llvm-tools-preview rustc-dev
+rustup target install aarch64-unknown-linux-gnu
+rustup target install x86_64-unknown-linux-gnu
+</code></pre>
+<p>Update the <code>STD_TARGETS</code> used when building <code>postgrestd</code> to include both architectures.
+This step will take longer with cross compilation then only one architectures, as
+it is required to double some of the work.</p>
+<pre><code class="language-bash">PG_VER=15 \
+    STD_TARGETS=&quot;x86_64-postgres-linux-gnu aarch64-postgres-linux-gnu&quot; \
+    ./build
+</code></pre>
+<blockquote>
+<p>The above environment variables are the default... you can just run <code>./build</code>.  <code>PG_VER=15</code> currently represents the latest released PostgreSQL version. </p>
+</blockquote>
+<h2 id="configure-and-restart-postgresql"><a class="header" href="#configure-and-restart-postgresql">Configure and restart PostgreSQL</a></h2>
+<p>The PostgreSQL configuration in <code>postgresql.conf</code> must be updated for PL/Rust
+to function. This section illustrates the minimum required changes so PL/Rust
+will function. 
+See the <a href="./config-pg.html">PostgreSQL configuration</a> section for more configuration details.</p>
+<p>PL/Rust requires <code>shared_preload_libraries</code> includes <code>plrust</code> and that you
+define <code>plrust.work_dir</code>.</p>
+<blockquote>
+<p>NOTE:  PL/Rust with cross compilation support also requires <code>plrust.compilation_targets</code>.</p>
+</blockquote>
+<p>Edit the PostgreSQL configuration file still as the <code>postgres</code> Linux user.</p>
+<pre><code class="language-bash">nano /etc/postgresql/15/main/postgresql.conf
+</code></pre>
+<p>Update the configuration with these items.  Note that <code>shared_preload_libraries</code>
+might already be set with a value before you add <code>plrust</code>.  Use a comma separated
+list of extensions to include multiple libraries in this configuration option.</p>
+<pre><code>shared_preload_libraries = 'plrust'
+plrust.work_dir = '/tmp'
+</code></pre>
+<p>The PostgreSQL service needs to be restarted for the configuration changes
+to take effect. Exit the <code>postgres</code> user and restart the PostgreSQL service.</p>
+<pre><code class="language-bash">exit
+sudo systemctl restart postgresql
+</code></pre>
+<h2 id="reset-permissions"><a class="header" href="#reset-permissions">Reset permissions</a></h2>
+<p>In order to install the PL/Rust extension as the <code>postgres</code> users permissions
+were updated in the <a href="install-prerequisites.html#permissions">Permissions section</a>
+of the Install PL/Rust Prerequisites section.
+Change the permissions for the <code>extension</code> and <code>lib</code> folders back
+to being owned by the <code>root</code> user.</p>
+<pre><code class="language-bash">sudo chown root -R /usr/share/postgresql/15/extension/
+sudo chown root -R /usr/lib/postgresql/15/lib/
+</code></pre>
+<h2 id="try-it-out"><a class="header" href="#try-it-out">Try it out</a></h2>
+<p>Create a <code>plrust</code> database and connect to the <code>plrust</code> database
+using <code>psql</code>.</p>
+<pre><code class="language-bash">sudo -u postgres psql -c &quot;CREATE DATABASE plrust;&quot;
+sudo -u postgres psql -d plrust
+</code></pre>
+<p>Create the <code>plrust</code> extension.</p>
+<pre><code class="language-sql">CREATE EXTENSION plrust;
+</code></pre>
+<p>If you installed the untrusted PL/Rust you will be warned of that detail
+in this step.</p>
+<pre><code class="language-bash">WARNING:  plrust is **NOT** compiled to be a trusted procedural language
+</code></pre>
+<p>The following example creates a <code>plrust</code> function named <code>plrust.one()</code>
+that simply returns the integer 1.</p>
+<pre><code class="language-sql">CREATE FUNCTION plrust.one()
+    RETURNS INT LANGUAGE plrust
+AS
+$$
+    Ok(Some(1))
+$$;
+</code></pre>
+<p>Using a function created with PL/Rust is the same as using any other
+PostgreSQL function.  A scalar function like <code>plrust.one()</code> can
+be used simply like below.</p>
+<pre><code class="language-sql">SELECT plrust.one();
+</code></pre>
+<pre><code>┌─────┐
+│ one │
+╞═════╡
+│   1 │
+└─────┘
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="update-plrust"><a class="header" href="#update-plrust">Update PL/Rust</a></h1>
+<p>This section explains how to update PL/Rust installations.  This assumes
+you installed PL/Rust following our <a href="./install-plrust.html">installation guide</a> and pgx and PL/Rust are installed using the <code>postgres</code> Linux user.</p>
+<h2 id="update-pgx"><a class="header" href="#update-pgx">Update pgx</a></h2>
+<p>A PL/Rust update is often accompanied by an update of the underlying
+<code>pgx</code> project.  Install the latest version of pgx.
+Changing into the plrust folder ensures the <code>rustc</code> version used
+for installation is the same required by PL/Rust.</p>
+<p>Start as a user with <code>sudo</code> access.</p>
+<pre><code class="language-bash">sudo chown postgres -R /usr/share/postgresql/15/extension/
+sudo chown postgres -R /usr/lib/postgresql/15/lib/
+</code></pre>
+<pre><code class="language-bash">sudo su - postgres
+cd ~/plrust
+git pull
+cargo install cargo-pgx --locked
+</code></pre>
+<h2 id="update-plrust-1"><a class="header" href="#update-plrust-1">Update PL/Rust</a></h2>
+<p>Follow these steps to upgrade PL/Rust from GitLab to use
+the latest release.</p>
+<p>Update <code>plrustc</code>, <code>postgrestd</code> and <code>plrust</code> installations.</p>
+<pre><code class="language-bash">cd ~/plrust/plrustc
+./build.sh
+mv ~/plrust/build/bin/plrustc ~/.cargo/bin/
+
+cd ~/plrust/plrust
+PG_VER=15 \
+    STD_TARGETS=&quot;x86_64-postgres-linux-gnu &quot; \
+    ./build
+
+cargo pgx install --release \
+    --features trusted \
+    -c /usr/bin/pg_config
+</code></pre>
+<p>Exit out of <code>postgres</code> user back to user with sudo.</p>
+<pre><code class="language-bash">exit
+</code></pre>
+<p>Restart Postgres, required b/c plrust is in <code>shared_preload_libraries</code>.
+Set permissions back to default.</p>
+<pre><code class="language-bash">sudo systemctl restart postgresql
+
+sudo chown root -R /usr/share/postgresql/15/extension/
+sudo chown root -R /usr/lib/postgresql/15/lib/
+</code></pre>
+<h2 id="rust-versions"><a class="header" href="#rust-versions">Rust versions</a></h2>
+<p>See the section(s) about Rust versions
+the the <a href="./install-plrust.html">Install PL/Rust</a> section.
+Pay special attention to the versions defined by PL/Rust, and your
+system defaults for <code>rustc</code> and <code>rustup</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="plrust-functions-and-arguments"><a class="header" href="#plrust-functions-and-arguments">PL/Rust Functions and Arguments</a></h1>
+<p>PL/Rust functions are created with the standard
+<a href="https://www.postgresql.org/docs/current/sql-createfunction.html"><code>CREATE FUNCTION</code></a>
+syntax and <code>LANGUAGE plrust</code>.
+This section provides examples how to create a variety
+of function using PL/Rust.</p>
+<p>The basic function structure is shown in the following example.</p>
+<pre><code class="language-sql">CREATE FUNCTION funcname (argument-list)
+    RETURNS return-type
+    -- function attributes can go here
+AS $$
+    # PL/Rust function body goes here
+$$ LANGUAGE plrust;
+</code></pre>
+<p>The body of the function is ordinary
+Rust code. When the <code>CREATE FUNCTION</code> is ran the Rust code is
+complied using the <code>pgx</code> framework.
+This compile process can take a bit of time.
+The compile time required is one reason anonymous blocks (<code>DO</code> blocks)
+are not supported at this time.</p>
+<p>The syntax of the <code>CREATE FUNCTION</code> command requires the function
+body to be written as a string constant. It is usually most convenient 
+to use dollar quoting (<code>$$</code>, see <a href="https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-DOLLAR-QUOTING">Section 4.1.2.4</a>)
+for the string constant. If you choose to use escape string syntax
+<code>E''</code>, you must double any single quote marks (') and
+backslashes () used in the body of the function (see
+<a href="https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-STRINGS">Section 4.1.2.1</a>).</p>
+<h2 id="basic-plrust-example"><a class="header" href="#basic-plrust-example">Basic PL/Rust Example</a></h2>
+<p>The following example creates a basic <code>plrust</code> function named
+<code>plrust.one()</code> to simply returns the integer <code>1</code>.</p>
+<pre><code class="language-sql">CREATE FUNCTION plrust.one()
+    RETURNS INT
+    LANGUAGE plrust
+AS
+$$
+    Ok(Some(1))
+$$
+;
+</code></pre>
+<h2 id="function-with-parameters"><a class="header" href="#function-with-parameters">Function with parameters</a></h2>
+<p>The following example creates a function named <code>plrust.strlen</code>
+that accepts one parameter named <code>val</code>. The function returns a <code>BIGINT</code> representing the length of the text in <code>val</code>.  The variable names
+defined in the function definition can be used directly in the Rust
+code within the function's body.</p>
+<pre><code class="language-sql">CREATE FUNCTION plrust.strlen(val TEXT)
+    RETURNS BIGINT
+    LANGUAGE plrust
+AS $$
+    Ok(Some(val.unwrap().len() as i64))
+$$;
+</code></pre>
+<p>Using the <code>strlen()</code> function works as expected.</p>
+<pre><code class="language-sql">SELECT plrust.strlen('Hello, PL/Rust');
+</code></pre>
+<pre><code>┌────────┐
+│ strlen │
+╞════════╡
+│     14 │
+└────────┘
+</code></pre>
+<p>The <code>plrust.strlen</code> function above used <code>unwrap()</code> to parse the
+text variable. Changing the function definition to include <code>STRICT</code>
+avoids the need to use <code>unwrap()</code>.  The following version
+of <code>plrust.strlen</code> works the same as above.</p>
+<pre><code class="language-sql">    CREATE FUNCTION plrust.strlen(val TEXT)
+    RETURNS BIGINT
+    LANGUAGE plrust STRICT
+AS $$
+    Ok(Some(val.len() as i64))
+$$;
+</code></pre>
+<h3 id="functions-with-anonymous-parameters-not-allowed"><a class="header" href="#functions-with-anonymous-parameters-not-allowed">Functions with anonymous parameters not allowed</a></h3>
+<p>PL/Rust functions with parameters require named parameters.
+This is different from functions written in other languages,
+such as SQL where <code>strlen(TEXT, INT)</code> allows the use of
+<code>$1</code> and <code>$2</code> within the function body.</p>
+<p>https://www.postgresql.org/docs/current/sql-createfunction.html</p>
+<p>The succinct reason anonymous parameters are not allowed is because
+&quot;It does not align with Rust.&quot;  Requiring named parameters
+keeps functionality simple, direct and obvious.</p>
+<p>One of the reasons people use Rust is because of the quality of the compiler's feedback on incorrect code. Allowing anonymous parameters would ultimately require transforming the code in a way that would either result in potentially garbled error messages, or arbitrarily restricting what sets of identifiers can be used. Simply requiring identifiers skips all of that.</p>
+<h2 id="calculations"><a class="header" href="#calculations">Calculations</a></h2>
+<p>PL/Rust functions can performance calculations, such as converting
+distance values from feet to miles.</p>
+<pre><code class="language-sql">CREATE FUNCTION plrust.distance_feet_to_miles(feet FLOAT)
+    RETURNS FLOAT
+    LANGUAGE plrust STRICT
+AS $$
+    Ok(Some(feet / 5280.0))
+$$;
+</code></pre>
+<p>Using the function.</p>
+<pre><code class="language-sql">SELECT plrust.distance_feet_to_miles(10000);
+</code></pre>
+<pre><code>┌────────────────────────┐
+│ distance_feet_to_miles │
+╞════════════════════════╡
+│      1.893939393939394 │
+└────────────────────────┘
+</code></pre>
+<h2 id="use-dependencies"><a class="header" href="#use-dependencies">Use dependencies</a></h2>
+<p>One of the powerful features of <code>plrust</code> is its ability to define <code>dependencies</code>
+in the function.  The following examples use the
+<a href="https://docs.rs/faker_rand/latest/faker_rand/index.html"><code>faker_rand</code> crate</a>
+in functions to generate fake text data.</p>
+<p>The <code>random_first_name()</code> function returns a random first name using the
+<code>en_us</code> locale.</p>
+<pre><code class="language-sql">CREATE FUNCTION plrust.random_slogan() RETURNS TEXT
+LANGUAGE plrust AS $$
+[dependencies]
+    faker_rand = &quot;0.1&quot;
+    rand = &quot;0.8&quot;
+[code]
+    use faker_rand::en_us::company::Slogan;
+    Ok(Some(rand::random::&lt;Slogan&gt;().to_string()))
+$$;
+</code></pre>
+<pre><code class="language-sql">SELECT plrust.random_slogan();
+</code></pre>
+<pre><code>┌─────────────────────────────┐
+│        random_slogan        │
+╞═════════════════════════════╡
+│ Ergonomic composite schemas │
+└─────────────────────────────┘
+</code></pre>
+<pre><code class="language-sql">CREATE FUNCTION plrust.random_company_name(locale TEXT)
+    RETURNS TEXT
+    LANGUAGE plrust STRICT
+AS $$
+[dependencies]
+    faker_rand = &quot;0.1&quot;
+    rand = &quot;0.8&quot;
+[code]
+    match locale {
+        &quot;en_us&quot; =&gt; {
+            use faker_rand::en_us::company::CompanyName;
+            Ok(Some(rand::random::&lt;CompanyName&gt;().to_string()))
+        }
+        &quot;fr_fr&quot; =&gt; {
+            use faker_rand::fr_fr::company::CompanyName;
+            Ok(Some(rand::random::&lt;CompanyName&gt;().to_string()))
+        }
+        _ =&gt; panic!(&quot;Unsupported locale. Use en_us or fr_fr&quot;)
+    }
+$$;
+</code></pre>
+<pre><code class="language-sql">SELECT plrust.random_company_name('en_us') AS en_us,
+    plrust.random_company_name('fr_fr') AS fr_fr;
+</code></pre>
+<pre><code>┌────────────┬───────────────┐
+│   en_us    │     fr_fr     │
+╞════════════╪═══════════════╡
+│ Furman Inc │ Élisabeth SEM │
+└────────────┴───────────────┘
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="data-types"><a class="header" href="#data-types">Data types</a></h1>
+<p>PL/Rust has a rich mapping of database between PostgreSQL data types and
+Rust data types. These data type mappings are maintained in the <code>pgx</code> framework
+and are <a href="https://github.com/tcdi/pgx#mapping-of-postgres-types-to-rust">documented in the pgx documentation</a>.</p>
+<p>Documentation of pgx's <code>datum</code> support is on
+<a href="https://docs.rs/pgx/latest/pgx/datum/index.html">docs.rs</a>.</p>
+<h2 id="direct-mappings"><a class="header" href="#direct-mappings">Direct mappings</a></h2>
+<p>A few of PostgreSQL's data types map directly to Rust data types. For example,
+each of the variations of <code>INTEGER</code> has a direct mapping to a Rust type,
+e.g. <code>SMALLINT</code> -&gt; <code>i8</code> and <code>BIGINT</code> -&gt; <code>i64</code>.</p>
+<table><thead><tr><th>Postgres Type</th><th>Rust Type (as <code>Option&lt;T&gt;</code>)</th></tr></thead><tbody>
+<tr><td><code>bytea</code></td><td><code>Vec&lt;u8&gt;</code> or <code>&amp;[u8]</code> (zero-copy)</td></tr>
+<tr><td><code>text</code></td><td><code>String</code> or <code>&amp;str</code> (zero-copy)</td></tr>
+<tr><td><code>varchar</code></td><td><code>String</code> or <code>&amp;str</code> (zero-copy) or <code>char</code></td></tr>
+<tr><td><code>&quot;char&quot;</code></td><td><code>i8</code></td></tr>
+<tr><td><code>smallint</code></td><td><code>i16</code></td></tr>
+<tr><td><code>integer</code></td><td><code>i32</code></td></tr>
+<tr><td><code>bigint</code></td><td><code>i64</code></td></tr>
+<tr><td><code>oid</code></td><td><code>u32</code></td></tr>
+<tr><td><code>real</code></td><td><code>f32</code></td></tr>
+<tr><td><code>double precision</code></td><td><code>f64</code></td></tr>
+<tr><td><code>bool</code></td><td><code>bool</code></td></tr>
+<tr><td><code>void</code></td><td><code>()</code></td></tr>
+<tr><td><code>NULL</code></td><td><code>Option::None</code></td></tr>
+</tbody></table>
+<h2 id="mappings-through-pgx"><a class="header" href="#mappings-through-pgx">Mappings through pgx</a></h2>
+<p>Many of the other PostgreSQL data types supported by PL/Rust are implemented
+within the <code>pgx</code> framework.</p>
+<table><thead><tr><th>Postgres Type</th><th>Rust Type (as <code>Option&lt;T&gt;</code>)</th></tr></thead><tbody>
+<tr><td><code>json</code></td><td><code>pgx::Json(serde_json::Value)</code></td></tr>
+<tr><td><code>jsonb</code></td><td><code>pgx::JsonB(serde_json::Value)</code></td></tr>
+<tr><td><code>date</code></td><td><code>pgx::Date</code></td></tr>
+<tr><td><code>time</code></td><td><code>pgx::Time</code></td></tr>
+<tr><td><code>timestamp</code></td><td><code>pgx::Timestamp</code></td></tr>
+<tr><td><code>time with time zone</code></td><td><code>pgx::TimeWithTimeZone</code></td></tr>
+<tr><td><code>timestamp with time zone</code></td><td><code>pgx::TimestampWithTimeZone</code></td></tr>
+<tr><td><code>anyarray</code></td><td><code>pgx::AnyArray</code></td></tr>
+<tr><td><code>anyelement</code></td><td><code>pgx::AnyElement</code></td></tr>
+<tr><td><code>box</code></td><td><code>pgx::pg_sys::BOX</code></td></tr>
+<tr><td><code>point</code></td><td><code>pgx::pgx_sys::Point</code></td></tr>
+<tr><td><code>tid</code></td><td><code>pgx::pg_sys::ItemPointerData</code></td></tr>
+<tr><td><code>cstring</code></td><td><code>&amp;core::ffi::CStr</code></td></tr>
+<tr><td><code>inet</code></td><td><code>pgx::Inet(String)</code> -- TODO: needs better support</td></tr>
+<tr><td><code>numeric</code></td><td><code>pgx::AnyNumeric</code> or <code>pgx::Numeric&lt;P, S&gt;</code></td></tr>
+<tr><td><code>ARRAY[]::&lt;type&gt;</code></td><td><code>Vec&lt;Option&lt;T&gt;&gt;</code> or <code>pgx::Array&lt;T&gt;</code> (zero-copy)</td></tr>
+<tr><td><code>internal</code></td><td><code>pgx::PgBox&lt;T&gt;</code> where <code>T</code> is any Rust/Postgres struct</td></tr>
+<tr><td><code>uuid</code></td><td><code>pgx::Uuid([u8; 16])</code></td></tr>
+</tbody></table>
+<h2 id="specifics"><a class="header" href="#specifics">Specifics</a></h2>
+<h3 id="numeric-support"><a class="header" href="#numeric-support">Numeric support</a></h3>
+<p>The <code>NUMERIC</code> PostgreSQL data type can map to either
+<a href="https://docs.rs/pgx/latest/pgx/datum/numeric/struct.AnyNumeric.html"><code>pgx::AnyNumeric</code></a>
+or
+<a href="https://docs.rs/pgx/latest/pgx/datum/numeric/struct.Numeric.html"><code>pgx::Numeric&lt;P, S&gt;</code></a>
+in PL/Rust.</p>
+<p>The <code>pgx::AnyNumeric</code> type is the PostgreSQL <code>NUMERIC</code> type with default
+precision and scale values.  Generally, this is the type you’ll want to use as function arguments when working with numeric data.</p>
+<p>The <code>pgx::Numeric&lt;P, S&gt;</code> type is a wrapper around the PostgreSQL
+<code>NUMERIC(P, S)</code> type. Its Precision and Scale values are known at compile-time to assist with scale conversions and general type safety.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="built-in-functions"><a class="header" href="#built-in-functions">Built-in functions</a></h1>
+<p>This page documents many of the high level functions,
+targeted functionality is covered on dedicated sub-sections.</p>
+<ul>
+<li><a href="spi.html">Server Programming Interface (SPI)</a></li>
+<li><a href="triggers.html">Triggers</a></li>
+<li><a href="logging.html">Logging to PostgreSQL from PL/Rust</a></li>
+</ul>
+<h2 id="functions-available"><a class="header" href="#functions-available">Functions available</a></h2>
+<p>Functions available to PL/Rust are defined under
+the <a href="https://github.com/tcdi/plrust/blob/main/trusted-pgx/src/lib.rs"><code>trusted-pgx</code> directory in <code>lib.rs</code></a>. User functions in <code>plrust</code> will not compile if they use
+the <code>unsafe</code> keyword.
+There are a handful of functions in <code>trusted-pgx</code> that are
+declared unsafe; <code>plrust</code> functions cannot use them because they would need an <code>unsafe {}</code> block.</p>
+<h2 id="datum-functions"><a class="header" href="#datum-functions">Datum functions</a></h2>
+<p>PL/Rust function support for various Datums are documented by
+<a href="https://docs.rs/pgx/latest/pgx/datum/index.html">pgx on docs.rs</a>,
+the source is <a href="https://github.com/tcdi/pgx/tree/master/pgx/src/datum">on GitHub</a> for those interested.
+There are Datums defined in <code>pgx</code> that are not included in PL/Rust
+because they have not been imported by <code>plrust</code>.</p>
+<p><a href="https://docs.rs/pgx/latest/pgx/datum/numeric/struct.AnyNumeric.html"><code>AnyNumeric</code></a>:
+A plain PostgreSQL <code>NUMERIC</code> with default precision and scale values. This is a sufficient type to represent any Rust primitive value from <code>i128::MIN</code> to <code>u128::MAX</code> and anything in between.</p>
+<p><a href="https://docs.rs/pgx/latest/pgx/datum/trait.FromDatum.html"><code>FromDatum</code></a> and <a href="https://docs.rs/pgx/latest/pgx/datum/trait.IntoDatum.html"><code>IntoDatum</code></a>: Provide conversions between <code>pg_sys::Datum</code> and Rust types. </p>
+<p><a href="https://docs.rs/pgx/latest/pgx/datum/struct.Json.html"><code>Json</code></a>
+and
+<a href="https://docs.rs/pgx/latest/pgx/datum/struct.JsonB.html"><code>JsonB</code></a>
+match the types in PostgreSQL of the same name.</p>
+<p><a href="https://docs.rs/pgx/latest/pgx/datum/struct.Date.html"><code>Date</code></a>:
+A plain PostgreSQL <code>DATE</code> type without a time component.</p>
+<p><code>Time</code> / <code>TimeWithTimeZone</code> / <code>Timestamp</code> / <code>TimestampWithTimeZone</code></p>
+<p>Range Support In progress</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="logging-to-postgresql-from-plrust"><a class="header" href="#logging-to-postgresql-from-plrust">Logging to PostgreSQL from PL/Rust</a></h1>
+<p>PL/Rust provides the ability to log details using PostgreSQL's logging
+system.  This functionality is exposed from pgx via
+<a href="https://github.com/tcdi/plrust/blob/main/plrust-trusted-pgx/src/lib.rs">plrust/plrust-trusted-pgx/src/lib.rs</a>.</p>
+<p>The macros available for logging are defined:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub use ::pgx::{
+    debug1, debug2, debug3, debug4, debug5, ereport, error, info, log, notice, warning,
+};
+<span class="boring">}
+</span></code></pre></pre>
+<h2 id="basic-logging"><a class="header" href="#basic-logging">Basic logging</a></h2>
+<p>Using the <code>log!()</code> macro will send the message defined in the function to the
+PostgreSQL logs defined by your <code>postgresql.conf</code>.  Running the following
+example of <code>plrust.one()</code> creates a <code>LOG</code> record.</p>
+<pre><code class="language-sql">CREATE FUNCTION plrust.one()
+    RETURNS INT
+    LANGUAGE plrust
+AS
+$$
+    log!(&quot;Hello!  Friendly log message here.&quot;);
+    Ok(Some(1))
+$$
+;
+</code></pre>
+<p>Running <code>plrust.one()</code> will run normally and the client running the query will
+be presented with the results.  The <code>log!()</code> macro adds the defined log
+message to the PostgreSQL log file.</p>
+<p>The exact contents on the log line created in PostgreSQL's log file depends
+on your <code>postgresql.conf</code> settings related to logging.  The following example
+is what it may look like. </p>
+<pre><code class="language-bash">2023-03-04 16:06:40 UTC [8109]: [15-1] user=postgres,db=plrust,app=psql,client=[local],query_id=-2211430114177040240  LOG:  Hello!  Friendly log message here.
+</code></pre>
+<p>The remainder of logging examples will only show the details controlled by PL/Rust
+like the following example.</p>
+<pre><code class="language-bash">LOG:  Hello!  Friendly log message here.
+</code></pre>
+<p>Logging is not limited to static messages.  Values from the function can be included
+using the <code>{variable}</code> notation.  Beware of data types, the <code>i32</code> value returned
+by the <code>plrust.one()</code> function needs to be converted <code>.to_string()</code> to include
+in the logged message string.</p>
+<pre><code class="language-sql">CREATE FUNCTION plrust.one()
+    RETURNS INT
+    LANGUAGE plrust
+AS
+$$
+    let one_val = 1_i32;
+    log!(&quot;The plrust.one() function is returning: {one_val}&quot;);
+    Ok(Some(one_val))
+$$
+;
+</code></pre>
+<p>When the above function runs, the resulting log line looks like the following.</p>
+<pre><code>LOG:  The plrust.one() function is returning: 1
+</code></pre>
+<h2 id="warnings"><a class="header" href="#warnings">Warnings</a></h2>
+<p>Use the <code>warning!()</code> macro to log a more severe message.
+Warnings are sent to the log file as well as being returned to the client as a
+<code>WARNING</code>.</p>
+<pre><code class="language-sql">CREATE FUNCTION plrust.one()
+    RETURNS INT
+    LANGUAGE plrust
+AS
+$$
+    let expected_val = 1_i32;
+    let one_val = 2_i32;
+
+    if expected_val != one_val {
+        warning!(&quot;The value for plrust.one() is unexpected. Found {one_val}&quot;)
+    } else {
+        log!(&quot;The plrust.one() function is returning: {one_val}&quot;);
+    }
+
+    Ok(Some(one_val))
+$$
+;
+</code></pre>
+<p>The following <code>WARNING</code> message is sent to the PostgreSQL log and to the client.</p>
+<pre><code class="language-bash">WARNING:  The value for plrust.one() is unexpected. Found 2
+</code></pre>
+<p>Running the above in <code>psql</code> looks like the following example.
+You can see the user is presented with the warning message as well as the results
+showing the <code>one</code> function returning the value <code>2</code>.</p>
+<pre><code class="language-bash">plrust=# select plrust.one();
+WARNING:  The value for plrust.one() is unexpected. Found 2
+DETAIL:  
+ one 
+-----
+   2
+(1 row)
+</code></pre>
+<h2 id="errors"><a class="header" href="#errors">Errors</a></h2>
+<p>There are cases when a function simply cannot proceed and these errors need to
+be logged.  The following example changes the <code>warning</code> from the previous example
+to an <code>error</code>. </p>
+<pre><code class="language-sql">CREATE FUNCTION plrust.one()
+    RETURNS INT
+    LANGUAGE plrust
+AS
+$$
+    let expected_val = 1_i32;
+    let one_val = 2_i32;
+    let one_val_str = one_val.to_string();
+
+    if expected_val != one_val {
+        error!(&quot;Invalid for plrust.one(). Found {one_val_str}&quot;)
+    } else {
+        log!(&quot;The plrust.one() function is returning: {one_val_str}&quot;);
+    }
+
+    Ok(Some(one_val))
+$$
+;
+</code></pre>
+<p>When PL/Rust runs the <code>error!()</code> macro the message is logged to the log file,
+returned to the client, and the execution of the function is terminated with a panic.
+In <code>psql</code> the user sees:</p>
+<pre><code class="language-bash">plrust=# select plrust.one();
+ERROR:  Invalid for plrust.one(). Found 2
+DETAIL:  
+plrust=# 
+</code></pre>
+<p>In the PostgreSQL logs the following output is recorded.  Notice the <code>panicked</code>
+line prior to the <code>ERROR</code> reported by the PL/Rust function.</p>
+<pre><code class="language-bash">thread '&lt;unnamed&gt;' panicked at 'Box&lt;dyn Any&gt;', /var/lib/postgresql/.cargo/registry/src/github.com-1ecc6299db9ec823/pgx-pg-sys-0.7.2/src/submodules/panic.rs:160:13
+ERROR:  Invalid for plrust.one(). Found 2
+</code></pre>
+<h2 id="notifying-the-user"><a class="header" href="#notifying-the-user">Notifying the user</a></h2>
+<p>Using <code>notice!()</code> and <code>info!()</code> macros return the message to the client running
+the query, allowing functions to provide feedback to the user running
+the query.  These options do not log the message to the PostgreSQL logs.</p>
+<pre><code class="language-sql">CREATE FUNCTION plrust.one()
+    RETURNS INT
+    LANGUAGE plrust
+AS
+$$
+    notice!(&quot;Hello, this is a notice&quot;);
+    Ok(Some(1))
+$$
+;
+</code></pre>
+<p>Running <code>SELECT plrust.one()</code> returns the expected value of <code>1</code>
+along with the defined notice. Using <code>psql</code> returns and example
+like the following code block.</p>
+<pre><code class="language-bash">NOTICE:  Hello, this is a notice
+DETAIL:  
+┌─────┐
+│ one │
+╞═════╡
+│   1 │
+└─────┘
+</code></pre>
+<h2 id="using-ereport"><a class="header" href="#using-ereport">Using ereport</a></h2>
+<p>For the most control over logging you can use the <code>ereport!()</code> macro.
+This is not necessary for most use cases.</p>
+<pre><code class="language-sql">CREATE FUNCTION one()
+    RETURNS INT
+    LANGUAGE plrust
+AS
+$$
+    ereport!(PgLogLevel::LOG,
+        PgSqlErrorCode::ERRCODE_SUCCESSFUL_COMPLETION,
+        &quot;A user ran the one() function&quot;);
+    Ok(Some(1))
+$$
+;
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="triggers"><a class="header" href="#triggers">Triggers</a></h1>
+<p>PL/Rust functions can be used to define trigger functions on data changes.
+A trigger function is created using the <code>CREATE FUNCTION</code> command, declaring it as a function with no arguments and a return type of
+<code>trigger</code>. Trigger variables are available from in <code>trigger</code>
+to describe the condition that triggered the call and the <code>new</code> and <code>old</code>
+rows.</p>
+<p>PL/Rust trigger support options are <a href="https://docs.rs/pgx/latest/pgx/prelude/struct.PgTrigger.html">documented on docs.rs</a> and defined in the <code>.rs</code> files in the
+<a href="https://github.com/tcdi/pgx/tree/master/pgx/src/trigger_support">trigger_support</a> directory.</p>
+<p>These examples are an expansion of the code from <a href="https://github.com/tcdi/plrust/blob/main/plrust/src/tests.rs"><code>plrust/plrust/src/tests.rs</code></a>. The elaborations here
+illustrate additional functionality.</p>
+<h2 id="table-for-triggers"><a class="header" href="#table-for-triggers">Table for Triggers</a></h2>
+<p>Create the <code>plrust.dog</code> table to allow us to keep track of our dogs, and how much attention
+they have received via a count of <code>scritches</code>.</p>
+<pre><code class="language-sql">CREATE TABLE plrust.dog (
+    id BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name TEXT,
+    scritches INT NOT NULL DEFAULT 0,
+    last_scritch TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+</code></pre>
+<p>The <code>name</code> column in <code>plrust.dog</code> is the only column without a default
+value set.  The <code>scritches</code> and <code>last_scritch</code> column both have defaults set.
+The goal of this design is to only have to define the <code>name</code> during <code>INSERT</code>.
+Subsequent <code>UPDATE</code> queries should only have to update the
+<code>last_scritch</code> column.</p>
+<h2 id="trigger-example"><a class="header" href="#trigger-example">Trigger example</a></h2>
+<p>The following example creates a trigger function named <code>plrust.dog_trigger()</code>.
+The trigger will be used on <code>INSERT</code> and <code>UPDATE</code> with slightly different
+behavior depending on which operation is being used. This logic is based
+on the value of <code>trigger.op()?</code>, for <code>INSERT</code> the <code>trigger.new</code> object is used,
+for <code>UPDATE</code> the <code>trigger.old</code> object is used.
+This code is explained further after the code block.</p>
+<pre><code class="language-sql">CREATE FUNCTION plrust.dog_trigger()
+RETURNS trigger AS
+$$
+    let tg_op = trigger.op()?;
+
+    let my_row = match tg_op {
+        INSERT =&gt; trigger.new().unwrap(),
+        _ =&gt; trigger.old().unwrap()
+    };
+    let mut my_row = my_row.into_owned();
+
+    let counter_field = &quot;scritches&quot;;
+    match my_row.get_by_name::&lt;i32&gt;(counter_field)? {
+        Some(val) =&gt; my_row.set_by_name(counter_field, val + 1)?,
+        None =&gt; (),
+    }
+
+    Ok(Some(my_row))
+$$
+LANGUAGE plrust;
+
+
+CREATE TRIGGER dog_trigger
+    BEFORE INSERT OR UPDATE ON plrust.dog
+    FOR EACH ROW
+    EXECUTE FUNCTION plrust.dog_trigger();
+</code></pre>
+<p>The <code>tg_op</code> variable is available from the <code>trigger.op()</code> method and has values
+of <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code> and <code>TRUNCATE</code>.  See the definition
+of <a href="https://docs.rs/pgx/latest/pgx/prelude/enum.PgTriggerOperation.html"><code>PgTriggerOperation</code> for more</a>.
+The <code>tg_op</code> value is used in a <code>match</code> to define the <code>my_row</code> variable.</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let tg_op = trigger.op()?;
+
+let my_row = match tg_op {
+    INSERT =&gt; trigger.new().unwrap(),
+    _ =&gt; trigger.old().unwrap()
+};
+let mut my_row = my_row.into_owned();
+<span class="boring">}
+</span></code></pre></pre>
+<p>With the appropriate <code>my_row</code> identified, the next step is to increment the
+<code>scritches</code> column by 1.  This is defined in the <code>counter_field</code> variable
+for easy reuse. The <code>get_by_name</code> and <code>set_by_name</code> functions are used for
+this operation.</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let counter_field = &quot;scritches&quot;;
+match my_row.get_by_name::&lt;i32&gt;(counter_field)? {
+    Some(val) =&gt; my_row.set_by_name(counter_field, val + 1)?,
+    None =&gt; (),
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Finally, the <code>my_row</code> is returned for the operation to proceed.</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>Ok(Some(my_row))
+<span class="boring">}
+</span></code></pre></pre>
+<p>Next we <code>INSERT</code> a row and then query the table to observe the effects of the trigger.</p>
+<pre><code class="language-sql">INSERT INTO plrust.dog (name) VALUES ('Nami');
+SELECT * FROM plrust.dog;
+</code></pre>
+<p>The results show that while the <code>DEFAULT</code> value for the <code>scritches</code> column is
+defined as <code>0</code> in the table, the initial value is 1 because trigger updated
+the value.</p>
+<pre><code class="language-bash"> id | name | scritches |         last_scritch          
+----+------+-----------+-------------------------------
+  1 | Nami |         1 | 2023-03-04 17:30:43.601525+00
+</code></pre>
+<p>If we update the record for Nami by setting the <code>last_scritch</code> value to <code>NOW()</code>
+the trigger will increment the <code>scritches</code> column value for us.</p>
+<pre><code class="language-sql">UPDATE plrust.dog
+    SET last_scritch = NOW()
+    WHERE id = 1;
+
+SELECT * FROM plrust.dog;
+</code></pre>
+<pre><code> id | name | scritches |         last_scritch          
+----+------+-----------+-------------------------------
+  1 | Nami |         2 | 2023-03-04 17:35:05.320482+00
+</code></pre>
+<h2 id="not-yet-supported"><a class="header" href="#not-yet-supported">Not yet supported</a></h2>
+<p>Event Triggers and <code>DO</code> blocks are not (yet) supported by PL/Rust.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="server-programming-interface-spi"><a class="header" href="#server-programming-interface-spi">Server Programming Interface (SPI)</a></h1>
+<p>PL/Rust provides support for PostgreSQL's <a href="https://www.postgresql.org/docs/current/spi.html">SPI</a>.</p>
+<p><code>Error</code></p>
+<p><code>Result</code></p>
+<p><code>Spi</code></p>
+<h2 id="example-usage"><a class="header" href="#example-usage">Example usage</a></h2>
+<p>The following function uses <code>SPI</code> to create a PostgreSQL
+<a href="https://www.postgresql.org/docs/current/functions-srf.html">Set Returning Function</a> (SRF).</p>
+<pre><code class="language-sql">CREATE FUNCTION spi_srf()
+    RETURNS SETOF BIGINT
+    LANGUAGE plrust
+AS
+$$
+    let query = &quot;SELECT id::BIGINT FROM generate_series(1, 3) id;&quot;;
+
+    Spi::connect(|client| {
+        let mut results = Vec::new();
+        let mut tup_table = client.select(query, None, None)?;
+
+        while let Some(row) = tup_table.next() {
+            let id = row[&quot;id&quot;].value::&lt;i64&gt;()?;
+            results.push(id);
+        }
+        Ok(Some(SetOfIterator::new(results)))
+    })
+
+$$;
+</code></pre>
+<h2 id="complex-return-types"><a class="header" href="#complex-return-types">Complex return types</a></h2>
+<p>PL/Rust currently <a href="https://github.com/tcdi/plrust/issues/36">does not support <code>RETURNS TABLE</code></a> or
+<a href="https://github.com/tcdi/plrust/issues/200#issuecomment-1426880622">complex types with <code>RETURNS SETOF</code></a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="trusted-and-untrusted-plrust"><a class="header" href="#trusted-and-untrusted-plrust">Trusted and Untrusted PL/Rust</a></h1>
+<p>Normally, PL/Rust is installed as a &quot;trusted&quot; programming language named <code>plrust</code>.
+In this setup, certain Rust and <code>pgx</code> operations are disabled to preserve security.
+In general, the operations that are restricted are those that interact with the environment.
+This includes file handle operations, require, and use (for external modules).
+There is no way to access internals of the database server process or to gain
+OS-level access with the permissions of the server process, as a C function can do.
+Thus, any unprivileged database user can be permitted to use this language.</p>
+<p>Here is an example of a function that will not work because file system operations are not allowed for security reasons:</p>
+<pre><code>EXAMPLE COMING SOON
+</code></pre>
+<p>The creation of this function will fail as its use of a forbidden operation will be caught by the validator.</p>
+<p>Sometimes it is desirable to write Rust functions that are not restricted.
+To handle these cases, PL/Rust can also be installed as an &quot;untrusted&quot; language.
+In this case the full Rust language is available including <code>unsafe</code> code.
+See the
+<a href="install-plrust.html#untrusted-install">Untrusted install section</a>
+for steps to install untrusted PL/Rust.</p>
+<p>The writer of an untrusted PL/Rust function must take care that the function cannot be used to do anything unwanted, since it will be able to do anything that could be done by a user logged in as the database administrator. Note that the database system allows only database superusers to create functions in untrusted languages.</p>
+<p>If the above function was created by a superuser using the untrusted <code>plrust</code>, execution would succeed.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="postgresql-configuration-for-plrust"><a class="header" href="#postgresql-configuration-for-plrust">PostgreSQL Configuration for PL/Rust</a></h1>
+<p>PL/Rust has two <strong>required</strong> configuration options and a variety of non-required options.
+These options are set in the standard <code>postgresql.conf</code> configuration file used
+by PostgreSQL.</p>
+<p>PL/Rust has two required configuration options in untrusted and trusted installations.
+Using PL/Rust with cross compilation support has a 3rd required configuration option.
+Failure to set these variables
+will cause <code>plrust</code> extension to not function.</p>
+<h2 id="required"><a class="header" href="#required">Required</a></h2>
+<p>PL/Rust has two PostgreSQL configuration options that are always required for use,<code>shared_preload_libraries</code> and <code>plrust.work_dir</code>.</p>
+<h4 id="shared_preload_libraries-string"><a class="header" href="#shared_preload_libraries-string"><code>shared_preload_libraries</code> (string)</a></h4>
+<p>The <a href="https://www.postgresql.org/docs/current/runtime-config-client.html"><code>shared_preload_libraries</code> entry</a>
+needs to include <code>plrust</code>. This is a comma separated list of libraries that
+need to be pre-loaded in order to operate properly.</p>
+<pre><code class="language-bash">shared_preload_libraries = 'plrust'
+</code></pre>
+<h4 id="plrustwork_dir-string"><a class="header" href="#plrustwork_dir-string"><code>plrust.work_dir</code> (string)</a></h4>
+<p>The <code>plrust.work_dir</code> must be set to location for PL/Rust to save
+necessary intermediate files. This path must be writable by the user running
+the PostgreSQL process, typically <code>postgres</code> on common Linux distributions.</p>
+<pre><code class="language-bash">plrust.work_dir = '/tmp'
+</code></pre>
+<h2 id="additional-configuration-options"><a class="header" href="#additional-configuration-options">Additional Configuration Options</a></h2>
+<h4 id="plrustallowed_dependencies-string"><a class="header" href="#plrustallowed_dependencies-string"><code>plrust.allowed_dependencies</code> (string)</a></h4>
+<p>Define the path to a <code>toml</code> file with an allow-list of Rust crates and versions when creating
+PL/Rust functions.
+When <code>plrust.allowed_dependencies</code> is not defined, all Rust crates are allowed
+when creating PL/Rust functions.</p>
+<p>Consider a file <code>/path/to/plrust_allowed.toml</code> with the following contents.</p>
+<pre><code class="language-toml">foo = &quot;1.1.5&quot;
+</code></pre>
+<p>The configuration to restrict crates looks like the following example.</p>
+<pre><code class="language-bash">plrust.allowed_dependencies = /path/to/plrust_allowed.toml
+</code></pre>
+<h4 id="plrustpath_override-string"><a class="header" href="#plrustpath_override-string"><code>plrust.path_override</code> (string)</a></h4>
+<p>Set this if <code>cargo</code> and <code>cc</code> are not in the postmaster's <code>$PATH</code>.</p>
+<pre><code class="language-bash">plrust.path_override = '/special/path/to/.cargo/bin:/usr/bin'
+</code></pre>
+<h4 id="plrusttrusted_pgx_version-string"><a class="header" href="#plrusttrusted_pgx_version-string"><code>plrust.trusted_pgx_version</code> (string)</a></h4>
+<p>The version of the <code>plrust-trusted-pgx</code> crate from crates.io to use when
+compiling user functions. This typically should not need to be manually set.</p>
+<pre><code class="language-bash">plrust.trusted_pgx_version = '1.0.0'
+</code></pre>
+<h4 id="plrusttracing_level-string"><a class="header" href="#plrusttracing_level-string"><code>plrust.tracing_level</code> (string)</a></h4>
+<p>A <a href="https://docs.rs/tracing-subscriber/0.3.11/tracing_subscriber/filter/struct.EnvFilter.html">tracing directive</a>.</p>
+<pre><code class="language-bash">plrust.tracing_level = 'info'
+</code></pre>
+<h2 id="required-for-cross-compilation"><a class="header" href="#required-for-cross-compilation">Required for Cross Compilation</a></h2>
+<h4 id="plrustcompilation_targets-string"><a class="header" href="#plrustcompilation_targets-string"><code>plrust.compilation_targets</code> (string)</a></h4>
+<p>Using PL/Rust with cross compilation requires the <code>plrust.compilation_targets</code>
+configuration option.  This is required for PL/Rust to cross compile user functions.
+The <code>plrust.compilation_targets</code> option is a comma-separated list of values,
+of which only <code>x86_64</code> and <code>aarch64</code> are currently supported.</p>
+<pre><code class="language-bash">plrust.compilation_targets = 'x86_64, aarch64'
+</code></pre>
+<p>For PL/Rust to cross compile user functions it needs to know which CPU architectures via
+<code>plrust.compilation_targets</code>. This is a comma-separated list of values, of which only <code>x86_64</code> and <code>aarch64</code> are
+currently supported.</p>
+<h4 id="plrustarch_linker-string"><a class="header" href="#plrustarch_linker-string"><code>plrust.{arch}_linker</code> (string)</a></h4>
+<p>This is the name of the linker <code>rustc</code> should use on for cross-compile.
+The architecture linker names have sensible defaults and shouldn't need to be be
+changed (unless the host is some esoteric Linux distribution we have not encountered yet).</p>
+<pre><code class="language-bash">plrust.x86_64_linker = 'x86_64_linux_gnu_gcc'
+plrust.aarch64_linker = 'aarch64_linux_gnu_gcc'
+</code></pre>
+<h4 id="plrustarch_pgx_bindings_path-string"><a class="header" href="#plrustarch_pgx_bindings_path-string"><code>plrust.{arch}_pgx_bindings_path</code> (string)</a></h4>
+<p>The <code>plrust.{arch}_pgx_bindings_path</code> settings are actually required but PL/Rust will happily cross compile without them. If unspecified,
+PL/Rust will use the pgx bindings of the host architecture for the cross compilation target architecture too. In other words, if the host 
+is <code>x86_64</code> and PL/Rust is configured to cross compile to <code>aarch64</code> and the <code>plrust.aarch64_pgx_bindings_path</code> is <em>not</em> configured, it'll
+blindly use the bindings it already has for <code>x86_64</code>.  This may or may not actually work.</p>
+<p>To get the bindings, install <code>cargo-pgx</code> on the other system and run <code>cargo pgx cross pgx-target</code>. That'll generate a tarball. Copy that back 
+to the primary host machine and <code>untar</code> it somewhere (PL/Rust doesn't care where), and use that path as the configuration setting.</p>
+<p>Note that it is perfectly fine (and really, expected) to set all of these configuration settings on both architectures.
+PL/Rust will silently ignore the one for the current host.  In other words, plrust only uses them when cross compiling for 
+the other architecture.</p>
+<h2 id="lints"><a class="header" href="#lints">Lints</a></h2>
+<p>There are two The PL/Rust configuration options related to lints. <strong>These options
+should not be changed.</strong>
+Altering these configuration options has two main negative side effects.
+Disabling any of the pre-configured lints <strong>removes any and all expectation</strong>
+of PL/Rust being trusted.
+Changing this option can also prevent upgrading PL/Rust.</p>
+<p>See the <a href="config-lints.html">Lints Configuration</a> section for more details about the
+purpose of the Lints.</p>
+<h4 id="plrustcompile_lints-string"><a class="header" href="#plrustcompile_lints-string"><code>plrust.compile_lints</code> (string)</a></h4>
+<p>A comma-separated list of Rust lints to apply to every user function.</p>
+<pre><code class="language-bash">plrust.compile_lints = 'plrust_extern_blocks, plrust_lifetime_parameterized_traits, implied_bounds_entailment, unsafe_code, plrust_filesystem_macros, plrust_env_macros, plrust_external_mod, plrust_fn_pointers, plrust_async, plrust_leaky, plrust_print_macros, plrust_stdio, unknown_lints, deprecated, suspicious_auto_trait_impls, unaligned_references, soft_unstable, plrust_autotrait_impls'
+</code></pre>
+<h4 id="plrustrequired_lints-string"><a class="header" href="#plrustrequired_lints-string"><code>plrust.required_lints</code> (string)</a></h4>
+<p>A comma-separated list of Rust lints that are required to have been applied to a user function before PL/Rust will load the library and execute the function.</p>
+<p>The value of <code>plrust.required_lints</code> defaults to <code>plrust.compile_lints</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="rules-and-regulations"><a class="header" href="#rules-and-regulations">Rules and Regulations</a></h1>
+<p>This page outlines guidelines for using PL/Rust.</p>
+<h2 id="argument-names"><a class="header" href="#argument-names">Argument names</a></h2>
+<p>PL/Rust functions with arguments require named arguments.
+This is different from functions written in
+<a href="https://www.postgresql.org/docs/current/sql-createfunction.html">other languages</a>,
+such as SQL where <code>strlen(TEXT, INT)</code> allows the use of
+<code>$1</code> and <code>$2</code> within the function body.</p>
+<p>The succinct reason anonymous parameters are not allowed is because
+&quot;It does not align with Rust.&quot;  Requiring named parameters
+keeps functionality simple, direct and obvious.</p>
+<p>One of the reasons people use Rust is because of the quality of the compiler's feedback on incorrect code. Allowing anonymous parameters would ultimately require transforming the code in a way that would either result in potentially garbled error messages, or arbitrarily restricting what sets of identifiers can be used. Simply requiring identifiers skips all of that.</p>
+<pre><code class="language-sql">CREATE FUNCTION plrust.strlen(TEXT)
+    RETURNS BIGINT
+    LANGUAGE plrust STRICT
+AS $$
+    Ok(Some(arg0.len() as i64))
+$$;
+</code></pre>
+<pre><code>ERROR:  PL/Rust does not support unnamed arguments
+DETAIL:  PL/Rust argument names must also be valid Rust identifiers.  Rust's identifier specification can be found at https://doc.rust-lang.org/reference/identifiers.html
+</code></pre>
+<p>As the above error's detail explains, PL/Rust argument names
+must be
+<a href="https://doc.rust-lang.org/reference/identifiers.html">valid Rust identifiers</a>.</p>
+<pre><code class="language-sql">CREATE FUNCTION plrust.strlen(&quot;this name is not supported&quot; TEXT)
+    RETURNS BIGINT
+    LANGUAGE plrust STRICT
+AS $$
+    Ok(Some(&quot;this name is not supported&quot;.len() as i64))
+$$;
+</code></pre>
+<h2 id="argument-types"><a class="header" href="#argument-types">Argument Types</a></h2>
+<p><code>Option&lt;T&gt;</code> or <code>T</code> depending on <code>STRICT</code></p>
+<h2 id="return-types"><a class="header" href="#return-types">Return types</a></h2>
+<p><code>Result&lt;Option&lt;T&gt;&gt;</code></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="architecture"><a class="header" href="#architecture">Architecture</a></h1>
+<p>PL/Rust, a Rust-based extension built using <a href="https://github.com/tcdi/pgx">pgx</a>, provides a procedural language handler for Rust in PostgreSQL. When installed, PL/Rust allows this to work:</p>
+<pre><code class="language-sql">CREATE FUNCTION {fn_name} ({args})
+RETURNS {ret}
+-- function attributes can go here
+AS $$
+    // PL/Rust function body goes here
+    // All PL/Rust functions return Result&lt;Option&lt;{ret}&gt;&gt;
+$$ LANGUAGE plrust;
+</code></pre>
+<p>PL/Rust will compile the function as a dynamic library, load it, and execute it.</p>
+<h2 id="trusted-language"><a class="header" href="#trusted-language">Trusted Language</a></h2>
+<p>In order to create a <a href="https://www.postgresql.org/docs/current/sql-createlanguage.html">trusted</a> language handler in PostgreSQL we must restrict the functions compiled and executed by the language handler to the set of operations other code in PostgreSQL has access to.</p>
+<ul>
+<li>No operations on files except through the database itself</li>
+<li>Limit access to the database to that of other procedural language functions</li>
+<li>Limit access to system resources to those of a trusted language user function</li>
+<li>It must be sound enough to allow any unprivileged database user to use the language (<a href="https://www.postgresql.org/docs/current/plperl-trusted.html">postgresql.org</a>)</li>
+</ul>
+<h2 id="rust"><a class="header" href="#rust">Rust</a></h2>
+<p>A target tuple describes a &quot;platform&quot; that can execute code. Rust uses rustc, which requires that code is ahead-of-time compiled in order to do code generation, so it requires a target tuple that defines the code object it must generate. A code object has a format (e.g. ELF or Windows PE) which an operating system supports, instructions (e.g. aarch64 or wasm) which a machine architecture supports, and calls to system interfaces to the operating system (such as via GNU <code>libc.so</code> or MacOS <code>libSystem.dylib</code>) which require holistic support. These code objects may be executables (which the system may initialize as a process) or libraries (which may be &quot;linked&quot;, relocating code from them into the final executable at build time, or loading their code to call at runtime). Libraries used at build time are also called static libraries, objects, or archives. Libraries used at runtime are also called dynamic libraries or shared objects.</p>
+<p>The Rust compiler builds the Rust standard library as a static library and then links it into Rust code objects. The contents of this static library include the code which dynamically links against system interfaces. These system interfaces are what postgrestd intercepts by itself being a modification of the Rust standard library.</p>
+<p>The extension called &quot;PL/Rust&quot; which includes the language handler is responsible for covering the linking and loading steps. This extension may have privileges that user functions do not, using the Rust std of the same host target that PostgreSQL itself is compiled for, to interoperate in that privileged mode. This is as-usual for language handlers: they must typically be written in C.</p>
+<h2 id="design-goals"><a class="header" href="#design-goals">Design Goals</a></h2>
+<p>Design a custom rust compilation target for PostgreSQL that provides nearly &quot;safe&quot; (as Rust defines it) and &quot;trusted&quot; (as PostgreSQL defines a procedural language) PL/Rust.</p>
+<p>The goals for the approach include</p>
+<ul>
+<li>Architecture support for x86_64 and aarch64</li>
+<li>Operating system support for Linux</li>
+<li>Disallow File Handle operations</li>
+<li>Disallow access to the internals of the database</li>
+<li>Disallow access to the OS as the user executing the PostgreSQL process </li>
+<li>Disallow access into active postmaster process, i.e. no ability to reach into PostgreSQL memory space, despite executing inside it.</li>
+<li>Gracefully handle rust panics and have them interoperate with PostgreSQL's transaction system</li>
+<li>Memory allocation within PostgreSQL's palloc/pfree functions</li>
+</ul>
+<h2 id="approach"><a class="header" href="#approach">Approach</a></h2>
+<p>Following an approach similar to the selection between libc and the musl libc standard library for compilation, a PostgreSQL compilation target is defined that instructs the compiler to use the postgrestd library.  The postgrestd library provides the rust standard library interfaces except in the case where it is desirable to prevent access.  In those cases the code is <a href="https://doc.rust-lang.org/stable/rust-by-example/attribute/cfg.html">configured</a> to be not present. The result is a small shim on top of the rust library limited access to the standard library.</p>
+<h2 id="birds-eye-view"><a class="header" href="#birds-eye-view">Bird's Eye View</a></h2>
+<p><img src="assets/architecture_1.png" alt="" /></p>
+<h2 id="supporting-crates"><a class="header" href="#supporting-crates">Supporting Crates</a></h2>
+<p>Because PL/Rust implements a fairly complicated language with the intention to make it sound to use as a trusted procedural language, there are multiple supporting crates necessary to make it work.</p>
+<h3 id="postgrestd"><a class="header" href="#postgrestd">postgrestd</a></h3>
+<p>See <a href="https://github.com/tcdi/postgrestd">postgrestd</a> for more details.</p>
+<h2 id="cross-cutting-concerns"><a class="header" href="#cross-cutting-concerns">Cross-Cutting Concerns</a></h2>
+<p>This sections talks about the things which are everywhere and nowhere in particular.</p>
+<h3 id="code-generation"><a class="header" href="#code-generation">Code generation</a></h3>
+<p>PL/Rust uses <a href="https://doc.rust-lang.org/cargo/guide">Cargo</a> for code generation. Each function is built as its own crate to allow it to be individually dynamically loaded (however this is not a strict requirement: multiple functions could be generated together, it's merely a current implementation detail that simplifies some handling).</p>
+<p>PL/Rust builds reuse the same build directory to assist in exploiting the existing <a href="https://doc.rust-lang.org/cargo/guide/build-cache.html">build caching</a> implemented in Cargo. However, because of the <a href="https://doc.rust-lang.org/cargo/reference/resolver.html">resolver</a>, as soon as dependencies are involved, and because building PL/Rust code involves a nonzero number of default crate dependencies, the exact build graph may vary from build to build even for what appears to be the &quot;same crate&quot; to a programmer, as subtle changes in feature or version resolution can all cause the crate to need to be recompiled.</p>
+<h3 id="cancellation"><a class="header" href="#cancellation">Cancellation</a></h3>
+<h3 id="testing"><a class="header" href="#testing">Testing</a></h3>
+<h3 id="error-handling"><a class="header" href="#error-handling">Error Handling</a></h3>
+<h3 id="observability"><a class="header" href="#observability">Observability</a></h3>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="designing-for-trust"><a class="header" href="#designing-for-trust">Designing for Trust</a></h1>
+<h1 id="a-note-on-definitions"><a class="header" href="#a-note-on-definitions">A note on definitions</a></h1>
+<p>In order to allow building a Postgres extension in Rust, quite a lot of bindings to C code are required,
+and a language handler is necessarily a Postgres &quot;C&quot; function, which is usually packaged as a Postgres extension.
+Since the only Postgres extension of true concern for PL/Rust is the language handler and associated components,
+and most other functions that will be embedded in Postgres will be managed by this extension, I will redefine the difference arbitrarily for this document: the language handler is a Postgres extension, and &quot;Postgres function&quot; will be used to refer to any Postgres function <em>except</em> a language handler.</p>
+<h1 id="the-goal"><a class="header" href="#the-goal">The goal</a></h1>
+<p>Nominally, to make PL/Rust exist: a dialect of Rust nested in SQL that can function as a &quot;trusted procedural language&quot;.</p>
+<h1 id="the-caveat"><a class="header" href="#the-caveat">The caveat</a></h1>
+<p>A major obstacle to making PL/Rust a trustworthy language is that Rust is not an intrinsically safe language.</p>
+<p>Again, Rust is not an intrinsically safe language.</p>
+<p>There are three major details to this:</p>
+<ol>
+<li>Rust has not been formally verified to have all of the safety properties it intends to have. Bugs exist that undoubtedly violate its own design for memory safety. These bugs will eventually be fixed, because there is no soundness bug that is considered a &quot;breaking change&quot;, or rather, Rust considers all flaws in its type system that would prevent the type system from verifying memory safety to be acceptable to change and they are explicitly not governed by any stability promises. Nonetheless, Rust is only as safe as its implementation is safe.</li>
+<li>Rust is split into two sublanguages: Safe Rust and Unsafe Rust. Most Rust is Safe Rust. An <code>unsafe { }</code> block allows the usage of Unsafe Rust code, and most Unsafe Rust code item declarations are also annotated with <code>unsafe</code><sup class="footnote-reference"><a href="#1">1</a></sup>. It is required to have Unsafe Rust as an implementation primitive in order to be able to specify the behavior of Rust: otherwise it would have to be written in another, also memory-unsafe language. By using both as part of Rust, certain guarantees based in the type system can traverse between Safe and Unsafe Rust and remain intact. Otherwise, the work to prove the type soundness would have to begin entirely within Safe Rust, without the ability to incrementally validate claims. However, this means that Unsafe Rust is always waiting behind all Safe Rust, so the abstraction boundary must be evaluated carefully.</li>
+<li>Rust is not safe against all logic errors, nor does it consider all operations to be <code>unsafe</code> that the programmer might think of as <code>unsafe</code>. For instance, Rust considers <code>panic!</code> to be &quot;safe&quot;: arguably, it is very not safe for <em>someone</em> if Rust code forms the core of an actively-running flight system for some airplane or helicopter and an uncaught panic terminates the flight system abruptly, rendering it inoperative for sufficiently long that the flight system cannot recover stability even after it reboots. It is also usually considered safe to perform IO on arbitrary files, but a database might take a dim view of writing to its storage files.</li>
+</ol>
+<p>This three-part caveat, one might notice, is largely a problem of <em>definition</em>:</p>
+<ol>
+<li>Safe according to whom?</li>
+<li>Safe for what uses?</li>
+<li>Safe in which context?</li>
+</ol>
+<p>However, each of these remain distinct issues because they cover different domains: validity, implementation, and context.</p>
+<h2 id="is-trust-insufficient-paranoia"><a class="header" href="#is-trust-insufficient-paranoia">Is Trust Insufficient Paranoia?</a></h2>
+<p>The caveats that apply to Rust apply in very similar form to other existing procedural languages, whether or not they are &quot;trusted&quot;:</p>
+<ol>
+<li>The question is not whether there is another vulnerability to discover in PL/Tcl, PL/Perl, PL/pgSQL, or with their shared interface with PostgreSQL: it's how long it will take to find it, whether anyone bothers to look, and whether it can actually be used to inflict damage.</li>
+<li>The trusted procedural languages have an underlying implementation in a memory-unsafe language. This poses the question of whether those languages are fully secure against the surface implementation being used to achieve unsafe effects. They undoubtedly are against trivial attacks.</li>
+<li>Some undesirable effects can still be achieved via the procedural languages. Notably, it's not clear they have much of a defense against e.g. using infinite loops to lock up that thread of execution rather than proceed further.</li>
+</ol>
+<p>This is not to say these languages are equally safe or unsafe: there's some advantages in being able to deploy dynamic checks.
+It merely is to observe that in the presence of sufficient paranoia, all implementations for all languages that exist are hard to trust.
+Web browsers face similar dilemmas, and many users run browsers with JavaScript limited or disabled because they do not trust it, despite its sandboxing.
+Any trusted language still means allowing arbitrary users with access to the database to execute code within that database which has broad capabilities.
+If there is a weak point those capabilities can be applied to break through, and an attacker cares enough to keep searching, it will be found.</p>
+<p>In effect, &quot;trust&quot; in practice only exists in two cases:</p>
+<ul>
+<li>not being aware of the consequences</li>
+<li>being willing to accept the possibility that worst-case consequences might happen</li>
+</ul>
+<h1 id="safety-and-trust-are-implementation-defined"><a class="header" href="#safety-and-trust-are-implementation-defined">Safety and trust are implementation-defined</a></h1>
+<p>Rust defines &quot;safety&quot; around the concept of &quot;memory safety&quot;, and uses a type system that includes ownership types to implement that.</p>
+<p>For PostgreSQL's database code, a &quot;trusted procedural language&quot; has only one concrete definition:
+Did a database administrator install it with the TRUSTED designation?
+There's nothing technically stopping a DBA with the appropriate privileges from installing an &quot;untrusted&quot; language as TRUSTED in PostgreSQL.</p>
+<p>A more amorphous but more practically useful definition is extensively implied throughout the documentation on procedural language:
+A trusted procedural language is a language where, if you install it as TRUSTED, this decision will not immediately bite you on the ass.
+The Postgres documentation defines this kind of &quot;trusted&quot; around the idea of limiting trusted language code to effects that either
+are of no consequence to the database or that the database was going to allow a user to hypothetically do anyway,
+and it uses dynamic checks and SQL roles to assist implementing that.
+Specifically, this means a trusted language's code should also respect SQL roles and not produce unintentional denials of service.
+It may still serve as an attack vector on the system, as can normal SQL-DDL commands, but if it does,
+it should make it slightly more frustrating for an attacker than running arbitrary assembly (AKA shellcode) would permit.
+Many attacks of this nature unfortunately will still end in being able to run shellcode if successful.</p>
+<p>It may be worth drawing a parallel to cryptography, another way of assuring data security and integrity:
+many supposedly &quot;one-way&quot; hash functions can theoretically be reversed by an attacker with sufficient power.
+The security of hashed data usually instead lies in making it so that the attacker would require large amounts of computational power,
+considerable time, and probably at least one or two novel breakthroughs in the understanding of computation itself,
+or else they may be spending so much time that the Earth will grow cold before they can unlock the data.
+Or hopefully at least a few days, allowing time for, say, discovering the breach and generating new passwords.
+We call something that achieves this goal &quot;secure&quot;, even though in actuality it is in fact &quot;eventually breakable&quot;.
+Likewise, a &quot;trusted procedural language&quot; will in practice be &quot;eventually breakable&quot;,
+and the goal is not necessarily to be inviolate but to offer some resistance.</p>
+<p>A quality implementation of a trusted procedural language should offer enough resistance that you can worry much less.
+The rest of this discussion will revolve around what is ultimately a proposal to implement PL/Rust
+as a high-quality trusted procedural language and how to evaluate that as an ongoing event,
+rather than one that is necessarily expected to be &quot;finished&quot;.</p>
+<h1 id="solving-the-problems"><a class="header" href="#solving-the-problems">Solving the problems</a></h1>
+<p>A perfectly elegant solution would address all of these parts of the problem in one swoop.
+However, that would require there to be some unifying dilemma that, if answered, can easily handle all of these outward projections.
+Unfortunately, a formally-verified wasm virtual machine that can be used to safely execute arbitrary Rust code inside it,
+yet still bind easily against PostgreSQL's C API is... a tall order. In other words, the more elegant solution simply doesn't exist yet.</p>
+<p>Because such a provably-secure-yet-porous-enough wasm sandbox currently doesn't exist, it's debatable if it would actually elegantly solve the issue, as we can't actually assess that claim.
+Notably, it's not clear that allowing arbitrary bindings in such a wasm sandbox would not simply create a sandbox that can do dangerous things.
+A protective box that encloses its contents yet still has many dangerous projections outside it is usually called a &quot;tank&quot;,
+and is considered to be a weapon of war, which may not be something you wish to introduce into your database.</p>
+<p>So in this, more clumsy world, such a three-part problem calls for a three-part solution... at least.</p>
+<ol>
+<li>To align Safe Rust more closely with what Postgres expects a trusted language to be able to do, replace <code>std</code> with <code>postgrestd</code>.</li>
+<li>To prevent Unsafe Rust from being used to violate expectations, bar the use of <code>unsafe</code> code.</li>
+<li>Deploy any and all additional hardening necessary.</li>
+<li>Keep doing that, actually: Defense in depth is a good thing.</li>
+</ol>
+<p>Eventually, using more effective and total layers of sandboxing can be used when that becomes more convenient, but the problem would remain:
+Normally, Rust code has the ability to call bindings that can do things a trusted procedural language should not be allowed to do,
+so if you allow Rust to bind calls to arbitrary external functions into wasm, then you allow Rust to &quot;break trust&quot;.
+A comprehensive approach that blocks off these exit routes is still required, and any additional sandboxing serves as reinforcement.</p>
+<h2 id="safety-unwinding-and-impl-drop"><a class="header" href="#safety-unwinding-and-impl-drop">Safety, Unwinding, and <code>impl Drop</code></a></h2>
+<details>
+<summary>
+Needs rewrite after rewrite of PGX error handling
+</summary>
+<p>In Rust, the <code>Drop</code> trait promises that if execution reaches certain points in a program then a destructor has been run.
+There is an immediate and obvious problem with this: Rust does not guarantee forward progress and includes diverging control flow that &quot;never returns&quot;.
+Thus it is possible for Rust code to never reach certain points in control flow, such as by invoking <code>panic!()</code> first.
+Normally, however, <code>panic!()</code> will cause &quot;unwinding&quot;, which walks back through Rust code to the nearest <code>catch_unwind</code>, running <code>Drop</code> as it goes.</p>
+<p>However, this is not always the case, and <code>panic!()</code> may be implemented by other forms of divergence such as immediate termination.
+This may seem surprising, but it is a simple extension of the natural observation that <code>SIGKILL</code> exists,
+or its sundry equivalents on non-Unix-like operating systems, and Rust code usually runs under an operating system.
+Rust does not consider terminating Rust code to be a violation of memory safety, because ceasing to progress
+is considered the appropriate way to respond to a situation where the program is not capable of soundly handling further events.
+A possible event that can cause this is the &quot;panic-in-panic&quot; scenario: if unwinding also causes a panic, Rust simply aborts.</p>
+<p>In a more targeted fashion, it is possible also to <code>mem::forget</code> something with <code>Drop</code>, or to wrap it in <code>ManuallyDrop</code>.
+Together, these facts mean that a destructor can never be relied on to be run when following arbitrary control flow.
+Only Rust control flow that lacks these features can be expected to run all destructors.
+In other words: <code>Drop</code> can be intercepted by both events inside normal Rust code and also &quot;outside&quot; it.</p>
+</details>
+<!--
+need to discuss:
+- statics
+- unwind runtimes
+- landing pads and where they are located in PL/Rust contexts
+- maybe thread safety?
+- other stuff with palloc?
+-->
+<h2 id="controlling-unsafe"><a class="header" href="#controlling-unsafe">Controlling <code>unsafe</code></a></h2>
+<p>Code can by hypothetically verified to be &quot;safe&quot; by either scanning the tokens directly using a procedural macro or by compiling it with various lints of the Rust compiler to detect and constrain use of <code>unsafe</code> enabled.</p>
+<h3 id="is-automatically-blocking-all-unsafe-code-enough"><a class="header" href="#is-automatically-blocking-all-unsafe-code-enough">Is automatically blocking all <code>unsafe</code> code enough?</a></h3>
+<p>No.</p>
+<p>The problem with blocking all <code>unsafe</code> code is that pgx, the Rust standard library, and essentially all implementation details of PL/Rust,
+will be implemented using <code>unsafe</code> code. There are also many crates which are soundly implemented and theoretically fine to use for PL/Rust,
+but rely on an <code>unsafe</code> implementation primitive.</p>
+<p>Further, some way must exist to implement the function call interface from PostgreSQL to Rust code.
+In PL/Rust, that is done via the <a href="https://crates.io/crates/pgx/">pgx crate</a>. This requires a lot of <code>unsafe</code> code.
+Thus, in order to compile any PL/Rust function, <em>a lot of unsafe code must be used</em>.
+This also means that something must be done to prevent the use of pgx's <code>unsafe fn</code> in PL/Rust
+while still allowing pgx to use <code>unsafe</code> code to implement its own interfaces.</p>
+<h3 id="plutonium"><a class="header" href="#plutonium">plutonium</a></h3>
+<h2 id="postgrestd-containing-the-problem"><a class="header" href="#postgrestd-containing-the-problem"><code>postgrestd</code>: containing the problem</a></h2>
+<p>If Rust is not allowed to bind against arbitrary external interfaces, then it only has <code>std</code> and whatever crates are permitted.
+This makes controlling <code>std</code> a priority, and <code>postgrestd</code> is used to implement that.</p>
+<p>The result of this is that as long as only Rust code compiled with the <code>postgrestd</code> fork is executed via PL/Rust,
+and as long as e.g. arbitrary <code>unsafe asm!</code> is not permitted, an escalation in privileges
+cannot simply jump outside the database and start doing arbitrary things.
+It is limited to subverting the database, which admittedly is still a bountiful target,
+but in this event containing the database itself can still be meaningfully done.</p>
+<h2 id="the-other-elephant-in-the-room-pgx"><a class="header" href="#the-other-elephant-in-the-room-pgx">The other elephant in the room: pgx</a></h2>
+<p>In addition to being used as the implementation detail of PL/Rust, pgx offers a full-fledged interface for building Postgres extensions in general.
+This means that like the Rust standard library, pgx is not perfectly adapted to being an interface for a trusted procedural language.
+There are two possible options in carving out what parts of pgx are appropriate to use:</p>
+<ul>
+<li>remove all inappropriate features behind <code>#[cfg]</code> blocks, OR</li>
+<li>create a separate crate and expose it as the pgx-Postgres user-callable interface</li>
+</ul>
+<p>Neither of these are perfectly satisfying because neither option provides a neatly-defined, automatic answer
+to the question &quot;of pgx's safe code, what should be allowed?&quot; to begin with.</p>
+<p>There is also the unfortunate question of &quot;is pgx's safe code actually sound?&quot;
+The crate's early implementation days included a few declared-safe wrappers that didn't fully check all invariants,
+and in some cases did not document the implied invariants, so an <a href="https://github.com/tcdi/pgx/issues/843">audit of code in pgx</a> is required.
+There is no getting around this, as it falls back on the fundamental problem of all procedural languages:
+They can only be as trustworthy as their implementations, which puts a burden on their implementation details to be correct.
+Fortunately, most of this audit has already been accomplished simply by the crate receiving scrutiny over the past 3 years.</p>
+<h2 id="building-arbitrary-crates"><a class="header" href="#building-arbitrary-crates">Building arbitrary crates</a></h2>
+<p>Part of what makes Rust such a useful language is that it has crates.io: an ecosystem that allows easy sharing of code,
+like most &quot;dynamic&quot; languages do, with very little support needed from an operating system's package manager,
+yet is a systems programming language. Thus, it's inevitable that PL/Rust will want to be able to build arbitrary dependencies.
+In fact, it has to add at least a few specially approved crates, its own build dependencies like pgx, in order to build Rust code,
+but we have to fully trust those crates anyways, so this is nothing new.
+But using crates we may not necessarily want to automatically trust introduces many, many complications as a direct result.</p>
+<p>Some of the primary concerns:</p>
+<ul>
+<li>build.rs</li>
+<li>procedural macros</li>
+<li><code>unsafe</code> code in dependencies</li>
+<li><code>#[cfg]</code> for a very strange runtime</li>
+</ul>
+<h1 id="future-directions"><a class="header" href="#future-directions">Future directions</a></h1>
+<p>When you allow a user to run code in your database's process, you are allowing them to attempt to subvert that process,
+so all users to some extent must <em>also</em> be trusted with the tools you are giving them,
+claims that trusted procedural languages allow untrusted users to run untrusted code besides. They just can be trusted <em>less</em>.
+However, if a user is expected to possibly &quot;sublet&quot; their tenancy to another user, creating a complex multitenancy situation,
+where the current superuser adopts the position of a &quot;hyperuser&quot;, and the user adopts the position of &quot;virtual superuser&quot;,
+the hyperuser who decides what languages are installed may still want to allow the virtual superuser's guests to run code,
+but has to be aware that they have <em>even less</em> trust.
+This means various traditional attack venues, e.g. heap attacks, become even more of a concern,
+as the hyperuser may have to mount a defense against the virtual superuser's guests,
+and the virtual superuser may install and run PL/Rust code on behalf of these guests.</p>
+<p>These are possible future directions in adding layers of security, not currently implemented or experimented with yet.</p>
+<h2 id="dynamic-allocator-hardening"><a class="header" href="#dynamic-allocator-hardening">Dynamic allocator hardening?</a></h2>
+<p>While PL/Rust merely interposes palloc, it... still interposes palloc. This means it can implement a &quot;buddy allocator&quot;.
+Since it's possible to control the global allocator for Rust code, this can help interfere with attacks on the heap.
+This is likely necessary, at the cost of some runtime overhead (offset by PL/Rust precompiling code for execution speed),
+to buy security against any attacks that target flaws in the Rust type system when those issues are not solved.
+Having to do this to harden a &quot;memory-safe&quot; language is not unusual, and the system administrator
+should be aware of this when deploying PostgreSQL and consider deploying PostgreSQL with a similarly hardened allocator
+so that all allocations benefit from this protection, but it's not unreasonable to want a second layer for PL/Rust.</p>
+<h2 id="background-worker-executor"><a class="header" href="#background-worker-executor">Background worker executor?</a></h2>
+<p>The process boundary offers a great deal of resilience against heap attacks. Background workers are separate processes, and
+PL/Java implementations use a similar approach of running code inside a daemon (which also takes care of compiling code).
+This may trade off a lot of performance gains from PL/Rust's overall approach, but it still may be worth it.</p>
+<h2 id="control-flow-integrity"><a class="header" href="#control-flow-integrity">Control Flow Integrity</a></h2>
+<p>There are various hardware-, kernel-, or compiler-level approaches to protect the integrity
+of even C or C++ code against reasonably determined attackers trying to usurp its control flow.
+Thus these approaches are sometimes called &quot;control flow integrity&quot; collectively,
+but they have various specific brand names like &quot;indirect branch targeting&quot;, &quot;control flow guard&quot;,
+or &quot;pointer authentication&quot;. The Rust compiler supports a number of these as nightly features,
+and while they require Postgres to also be built with support these features for them to work,
+it would be worth exploring their use for PL/Rust.</p>
+<h2 id="witx-the-wasm-strikes-back"><a class="header" href="#witx-the-wasm-strikes-back">witx: the wasm strikes back</a></h2>
+<p>A method of generating bindings for wasm automatically is being prototyped,
+called witx, which builds on &quot;WebAssembly Interface Types&quot;.
+It's not currently ready for primetime, but it is possible that
+within a few years it may be a feasible answer to many of these problems,
+especially in terms of hardening the Rust stack and heap against code
+just doing arbitrary nonsense to it, even if things get overly &quot;interesting&quot;.</p>
+<h1 id="notes"><a class="header" href="#notes">Notes</a></h1>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>There are a few cases where Unsafe Rust code can be declared without it being visibly denoted as such, and these are intended to be phased out eventually, but in these cases they generally still require an <code>unsafe { }</code> block to be called or they must be wrapped in an <code>unsafe fn</code>. The absence of the <code>unsafe</code> token can only be bypassed in Rust by declaring an <code>extern fn</code> (which is implicitly also an <code>unsafe fn</code>, allowing one to fill it with other <code>unsafe</code> code) and then calling that function from another language, like C.</p>
+</div>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="lints-1"><a class="header" href="#lints-1">Lints</a></h1>
+<p>PL/Rust has its own &quot;rustc driver&quot; named <code>plrustc</code>.  This must be installed using the 
+<a href="plrustc/build.sh"><code>plrustc/build.sh</code></a> script and the resulting executable must be on the <code>PATH</code>, or it should reside
+somewhere that is included in the <code>plrust.PATH_override</code> GUC.</p>
+<p>PL/Rust uses its own &quot;rustc driver&quot; so that it can employ custom lints to detect certain Rust code idioms and patterns
+that trigger &quot;I-Unsound&quot; bugs in Rust itself.  Think &quot;clippy&quot; but built into the Rust compiler itself. In addition to 
+these custom lints, PL/Rust uses some standard Rust lints to enforce safety.</p>
+<p>The <code>plrust.required_lints</code> GUC defines which lints must have been applied to a function before PL/Rust will load the
+library and execute the function.  Using the <code>PLRUST_REQUIRED_LINTS</code> environment variable, it is possible to enforce
+that certain lints are always required of compiled functions, regardless of the <code>plrust.required_lints</code> GUC value.
+<code>PLRUST_REQUIRED_LINTS</code>'s format is a comma-separated list of lint named.  It must be set in the environment in which 
+Postgres is started.  The intention here is that the system administrator can force certain lints for execution if for 
+some reason <code>postgresql.conf</code> or the users able to modify it are not trusted.</p>
+<p>In all cases, these lints are added to the generated code which wraps the user's <code>LANGUAGE plrust</code> function, as 
+<code>#![forbid(${lint_name})]</code>.  They are used with &quot;forbid&quot; to ensure a user function cannot change it back to &quot;allow&quot;.</p>
+<p>PL/Rust does <strong>not</strong> apply these lints to dependant, external crates.  Dependencies <em>are</em> allowed to internally use 
+whatever code they want, including <code>unsafe</code>.  Note that any public-facing <code>unsafe</code> functions won't be callable by a plrust 
+function.</p>
+<p>Dependencies are granted more freedom as the usable set can be controlled via the <code>plrust.allowed_dependencies</code> GUC.</p>
+<hr />
+<p><strong>It is the administrator's responsibility to properly vet external dependencies for safety issues that may impact
+the running environment.</strong></p>
+<hr />
+<p>Any <code>LANGUAGE plrust</code> code that triggers any of the below lints will fail to compile, indicating the triggered lint.</p>
+<h2 id="standard-rust-lints"><a class="header" href="#standard-rust-lints">Standard Rust Lints</a></h2>
+<h3 id="unknown_lints"><a class="header" href="#unknown_lints"><code>unknown_lints</code></a></h3>
+<p>https://doc.rust-lang.org/rustc/lints/listing/warn-by-default.html#unknown-lints</p>
+<p>PL/Rust won't allow any unknown (to our &quot;rustc driver&quot;) lints to be applied.  The justification for this is to mainly
+guard against type-os in the <code>plrust.compile_lints</code> GUC.</p>
+<h3 id="unsafe_code"><a class="header" href="#unsafe_code"><code>unsafe_code</code></a></h3>
+<p>https://doc.rust-lang.org/rustc/lints/listing/allowed-by-default.html#unsafe-code</p>
+<p>PL/Rust does not allow usage of <code>unsafe</code> code in <code>LANGUAGE plrust</code> functions.  This includes all the unsafe idioms such
+as dereferencing pointers and calling other <code>unsafe</code> functions.</p>
+<h3 id="implied_bounds_entailment"><a class="header" href="#implied_bounds_entailment"><code>implied_bounds_entailment</code></a></h3>
+<p>https://doc.rust-lang.org/rustc/lints/listing/warn-by-default.html#implied-bounds-entailment</p>
+<p>This lint detects cases where the arguments of an impl method have stronger implied bounds than those from the trait 
+method it's implementing.</p>
+<p>If used incorrectly, this can be used to implement unsound APIs.</p>
+<h3 id="deprecated"><a class="header" href="#deprecated"><code>deprecated</code></a></h3>
+<p>https://doc.rust-lang.org/rustc/lints/listing/warn-by-default.html#deprecated</p>
+<p>The deprecated lint detects use of deprecated items. This is forbidden because certain items in the Rust standard library are incorrectly-safe APIs but were only deprecated rather than removed when a version with the appropriate safety annotation was added.</p>
+<h3 id="suspicious_auto_trait_impls"><a class="header" href="#suspicious_auto_trait_impls"><code>suspicious_auto_trait_impls</code></a></h3>
+<p>https://doc.rust-lang.org/rustc/lints/listing/warn-by-default.html#suspicious-auto-trait-impls</p>
+<p>This defends against some patterns that can lead to soundness issues. These cases currently can only trigger in patterns which are otherwise blocked by the <code>unsafe_code</code> lint, but for better defense-in-depth, it's explicitly forbidden in PL/Rust.</p>
+<h3 id="unaligned_references"><a class="header" href="#unaligned_references"><code>unaligned_references</code></a></h3>
+<p>https://doc.rust-lang.org/rustc/lints/listing/deny-by-default.html#unaligned-references</p>
+<p>The unaligned_references lint detects unaligned references to fields of packed structs. This forbidden because it is a soundness hole in the language.</p>
+<h3 id="soft_unstable"><a class="header" href="#soft_unstable"><code>soft_unstable</code></a></h3>
+<p>https://doc.rust-lang.org/rustc/lints/listing/deny-by-default.html#soft-unstable</p>
+<p>This prevents the use of language and library features which were accidentally stabilized. This is forbidden because there's no reason to need to use these, and forbidding them reduces the set of APIs and features we have to consider in PL/Rust.</p>
+<h3 id="where_clauses_object_safety"><a class="header" href="#where_clauses_object_safety"><code>where_clauses_object_safety</code></a></h3>
+<p>https://doc.rust-lang.org/rustc/lints/listing/warn-by-default.html#where-clauses-object-safety</p>
+<p>This avoids some soundness holes that are in the language which can be used to trigger various crashes, see the lint documentation for details.</p>
+<h2 id="plrust-plrustc-lints"><a class="header" href="#plrust-plrustc-lints">PL/Rust <code>plrustc</code> Lints</a></h2>
+<h3 id="plrust_extern_blocks"><a class="header" href="#plrust_extern_blocks"><code>plrust_extern_blocks</code></a></h3>
+<p>This blocks the declaration of <code>extern &quot;API&quot; {}&quot;</code> blocks.  Primarily, this is to ensure a plrust function cannot 
+declare internal Postgres symbols as external.</p>
+<p>For example, this code pattern is blocked:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>extern &quot;C&quot; {
+    pub fn palloc(size: Size) -&gt; *mut ::std::os::raw::c_void;
+}
+<span class="boring">}
+</span></code></pre></pre>
+<h3 id="plrust_lifetime_parameterized_traits"><a class="header" href="#plrust_lifetime_parameterized_traits"><code>plrust_lifetime_parameterized_traits</code></a></h3>
+<p>Traits parameterized by lifetimes can be used to exploit Rust compiler bugs that lead to unsoundness issues.  PL/Rust
+does not allow such traits to be declared.</p>
+<p>For example, this code pattern is blocked:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    trait Foo&lt;'a&gt; {}
+<span class="boring">}
+</span></code></pre></pre>
+<h3 id="plrust_filesystem_macros"><a class="header" href="#plrust_filesystem_macros"><code>plrust_filesystem_macros</code></a></h3>
+<p>Filesystem macros such as <code>include_bytes!</code> and <code>include_str!</code> are disallowed, as they provide access to the underlying filesystem which should be unavailable to a trusted language handler.</p>
+<p>For example, this code pattern is blocked:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>const SOMETHING: &amp;str = include_str!(&quot;/etc/passwd&quot;);
+<span class="boring">}
+</span></code></pre></pre>
+<h3 id="plrust_fn_pointers"><a class="header" href="#plrust_fn_pointers"><code>plrust_fn_pointers</code></a></h3>
+<p>Currently, several soundness holes have to do with the interaction between function pointers, implied bounds, and nested references. As a stopgap against these, use of function pointer types and function trait objects are currently blocked. This lint will likely be made more precise in the future.</p>
+<p>Note that function types (such as the types resulting from closures as required by iterator functions) are still allowed, as these do not have the issues around variance.</p>
+<p>For example, the following code pattern is blocked:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn takes_fn_arg(x: fn()) {
+    x();
+}
+<span class="boring">}
+</span></code></pre></pre>
+<h3 id="plrust_async"><a class="header" href="#plrust_async"><code>plrust_async</code></a></h3>
+<p>Currently async/await are forbidden by PL/Rust due to unclear interactions around lifetime and soundness constraints. This may be out of an overabundance of caution. Specifically, code like the following will fail to compile:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>async fn an_async_fn() {
+    // ...
+}
+
+fn normal_function() {
+    let async_block = async {
+        // ...
+    };
+    // ...
+}
+<span class="boring">}
+</span></code></pre></pre>
+<h3 id="plrust_leaky"><a class="header" href="#plrust_leaky"><code>plrust_leaky</code></a></h3>
+<p>This lint forbids use of &quot;leaky&quot; functions such as <a href="https://doc.rust-lang.org/stable/std/mem/fn.forget.html"><code>mem::forget</code></a> and <a href="https://doc.rust-lang.org/stable/std/boxed/struct.Box.html#method.leak"><code>Box::leak</code></a>. While leaking memory is considered safe, it has undesirable effects and thus is blocked by default. For example, the lint will trigger on (at least) the following code:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>core::mem::forget(something);
+let foo = Box::leak(Box::new(1u32));
+let bar = vec![1, 2, 3].leak();
+<span class="boring">}
+</span></code></pre></pre>
+<p>Note that this will not prevent all leaks, as PL/Rust code could still create a leak by constructing a reference cycle using Rc/Arc, for example.</p>
+<h3 id="plrust_env_macros"><a class="header" href="#plrust_env_macros"><code>plrust_env_macros</code></a></h3>
+<p>This lint forbids use of environment macros such as <a href="https://doc.rust-lang.org/nightly/std/macro.env.html"><code>env!</code></a> and <a href="https://doc.rust-lang.org/nightly/std/macro.option_env.html"><code>option_env!</code></a>, as it allows access to data that should not be available to a trusted language handler.</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let path = env!(&quot;PATH&quot;);
+let rustup_toolchain_dir = option_env!(&quot;RUSTUP_TOOLCHAIN&quot;);
+// ...
+<span class="boring">}
+</span></code></pre></pre>
+<h3 id="plrust_external_mod"><a class="header" href="#plrust_external_mod"><code>plrust_external_mod</code></a></h3>
+<p>This lint forbids use of non-inline <code>mod blah</code>, as it can be used to access files a trusted language handler should not give access to.</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// This is allowed
+mod foo {
+    // some functions or whatever here...
+}
+
+// This is disallowed.
+mod bar;
+// More importantly, this is disallowed as well.
+#[path = &quot;/sneaky/path/to/something&quot;]
+mod baz;
+<span class="boring">}
+</span></code></pre></pre>
+<h3 id="plrust_print_macros"><a class="header" href="#plrust_print_macros"><code>plrust_print_macros</code></a></h3>
+<p>This lint forbids use of the <code>println!</code>/<code>eprintln!</code> family of macros (including <code>dbg!</code> and the non-<code>ln</code> variants), as these allow bypassing the norm. Users should use <code>pgx::log!</code> or <code>pgx::debug!</code> instead.</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>println!(&quot;hello&quot;);
+print!(&quot;plrust&quot;);
+
+eprintln!(&quot;this is also blocked&quot;);
+eprint!(&quot;even without the newline&quot;);
+
+dbg!(&quot;same here&quot;);
+<span class="boring">}
+</span></code></pre></pre>
+<h3 id="plrust_stdio"><a class="header" href="#plrust_stdio"><code>plrust_stdio</code></a></h3>
+<p>This lint forbids use of the functions for accessing standard streams (stdin, stdout, stderr) from PL/Rust, for the same reason as above. For example, the following code is forbidden:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>std::io::stdout().write_all(b&quot;foobar&quot;).unwrap();
+std::io::stderr().write_all(b&quot;foobar&quot;).unwrap();
+let _stdin_is_forbidden_too = std::io::stdin();
+<span class="boring">}
+</span></code></pre></pre>
+<h3 id="plrust_static_impls"><a class="header" href="#plrust_static_impls"><code>plrust_static_impls</code></a></h3>
+<p>This lint forbids certain <code>impl</code> blocks for types containing <code>&amp;'static</code> references. The precise details are somewhat obscure, but can usually be avoided by making a custom struct to contain your static reference, which avoids the particular soundness hole we're concerned with. For example:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// This is forbidden:
+impl SomeTrait for (&amp;'static Foo, Bar) {
+    // ...
+}
+
+// Instead, do this:
+struct MyType(&amp;'static Foo, Bar);
+impl SomeTrait for MyType {
+    // ...
+}
+<span class="boring">}
+</span></code></pre></pre>
+<h3 id="plrust_autotrait_impls"><a class="header" href="#plrust_autotrait_impls"><code>plrust_autotrait_impls</code></a></h3>
+<p>This lint forbids explicit implementations of the safe auto traits, as a workaround for various soundness holes around these. It may be relaxed in the future if those are fixed.</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>struct Foo(std::cell::Cell&lt;i32&gt;, std::marker::PhantomPinned);
+// Any of the following implementations would be forbidden.
+impl std::panic::UnwindSafe for Foo {}
+impl std::panic::RefUnwindSafe for Foo {}
+impl std::marker::Unpin for Foo {}
+<span class="boring">}
+</span></code></pre></pre>
+<p>As a workaround, in most cases, you should be able to use <a href="https://doc.rust-lang.org/nightly/std/panic/struct.AssertUnwindSafe.html"><code>std::panic::AssertUnwindSafe</code></a> instead of implementing one of the <code>UnwindSafe</code> traits, and Boxing your type can usually work around the need for <code>Unpin</code> (which should be rare in non-<code>async</code> code anyway).</p>
+<h3 id="plrust_suspicious_trait_object"><a class="header" href="#plrust_suspicious_trait_object"><code>plrust_suspicious_trait_object</code></a></h3>
+<p>This lint forbids trait object use in turbofish and generic defaults. This is an effort to fix <a href="https://play.rust-lang.org/?version=stable&amp;mode=debug&amp;edition=2021&amp;gist=764d78856996e1985ee88819b013c645">certain soundness holes</a> in the Rust language. More simply, the following patterns are disallowed:</p>
+<pre><code class="language-rs">// Trait object in turbofish
+foo::&lt;dyn SomeTrait&gt;();
+// Trait object in type default (enum, union, trait, and so on are all also forbidden)
+struct SomeStruct&lt;T = dyn SomeTrait&gt;(...);
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="environment-variables"><a class="header" href="#environment-variables">Environment variables</a></h1>
+<p>As part of PL/Rust's function compilation machinery, and in conjunction with <code>pgx</code> which does the hard work, a number
+of environment variables are set when PL/Rust executes <code>cargo</code>.</p>
+<p>These are not environment variables that need to set manually.  Generally, these are auto-detected and cannot be 
+overridden through configuration.</p>
+<table><thead><tr><th>Name</th><th>Value</th><th>How it's Used</th></tr></thead><tbody>
+<tr><td>PATH</td><td><code>~/cargo/bin:/usr/bin</code> or <code>/usr/bin</code> if &quot;postgres&quot; user has no home directory</td><td>The <code>PATH</code> environment variable is <strong>only</strong> set by PL/Rust if it detects that one isn't already set.  <br/>As mentioned above, this one <em>can</em> be overridden via the <code>plrust.PATH_override</code> GUC in <code>postgresql.conf</code>.</td></tr>
+<tr><td>RUSTC</td><td><code>plrustc</code></td><td>This is set to plrust's &quot;rust driver&quot; executable, named <code>plrustc</code>.  It must be on the system PATH.</td></tr>
+<tr><td>RUSTFLAGS</td><td><code>&quot;-Clink-args=-Wl,-undefined,dynamic_lookup&quot;</code></td><td>Used by <code>rustc</code> to indicate that Postgres internal symbols are only available at run-time, not compile-time.</td></tr>
+<tr><td>CARGO_TARGET_DIR</td><td>value of GUC <code>plrust.work_dir</code>/<code>target</code></td><td>This is the filesystem path <code>cargo</code> will store its intermediate compilation artifacts.</td></tr>
+<tr><td>CARGO_TARGET_X86_64_LINKER</td><td><code>x86_64-linux-gnu-gcc</code></td><td>Used only when cross-compiling <em>to</em> x86_64, this tells <code>rustc</code> which linker to use.  The <code>plrust.x86_64_linker</code> GUC can override the default.</td></tr>
+<tr><td>CARGO_TARGET_AARCH64_LINKER</td><td><code>aarch64-linux-gnu-gcc</code></td><td>Used only when cross-compiling <em>to</em> aarch64, this tells <code>rustc</code> which linker to use.  The <code>plrust.aarch64_linker</code> GUC can override the default.</td></tr>
+<tr><td>PGX_TARGET_INFO_PATH_PG${MAJOR_VERSION_NUM}</td><td>unset unless <code>plrust.{x86_64/aarch64}_pgx_bindings_path</code> GUC is set</td><td>Used only when cross-compiling <em>to</em> the specified target.  This tells <code>pgx</code> where to find the generated Postgres bindings for that platform.</td></tr>
+<tr><td>PGX_PG_CONFIG_AS_EN_VAR</td><td><code>true</code></td><td>Indicates to the <code>trusted-pgx</code> dependency, and ultimately <code>pgx</code> itself that instead of getting the values it needs for compilation from the Postgres <code>pg_config</code> tool, it should get them from environment variables.</td></tr>
+<tr><td>PGX_PG_CONFIG_VERSION</td><td>Provided by the running Postgres instance</td><td>Used by <code>pgx</code> to build the PL/Rust user function.</td></tr>
+<tr><td>PGX_PG_CONFIG_CPPFLAGS</td><td>Provided by the running Postgres instance</td><td>Used by <code>pgx</code> to build the PL/Rust user function (technically unused by PL/Rust's build process as PL/Rust does not include the pgx &quot;cshim&quot; for which this is normally used).</td></tr>
+<tr><td>PGX_PG_CONFIG_INCLUDEDIR-SERVER</td><td>Provided by the running Postgres instance</td><td>Used by <code>pgx</code> to build the PL/Rust user function.</td></tr>
+</tbody></table>
+<h2 id="safety"><a class="header" href="#safety">Safety</a></h2>
+<p>Note that PL/Rust uses Rust's <a href="https://doc.rust-lang.org/beta/std/process/struct.Command.html"><code>std::process::Command</code></a> 
+to exec <code>cargo</code>.  As such, it <strong>will</strong> inherit <strong>all</strong> environment variables set under the active backend <code>postgres</code> 
+process.  We recommend Postgres' execution environment be properly sanitized to your organizations requirements.</p>
+<p>As a pre-emptive measure, PL/Rust proactively un-sets a few environment variables
+that could negatively impact user function compilation.
+These are generally things used by the <code>pgx</code> development team that are not
+necessary for PL/Rust.</p>
+<ul>
+<li><code>DOCS_RS</code></li>
+<li><code>PGX_BUILD_VERBOSE</code></li>
+<li><code>PGX_PG_SYS_GENERATE_BINDINGS_FOR_RELEASE</code></li>
+<li><code>CARGO_MANIFEST_DIR</code></li>
+<li><code>OUT_DIR</code></li>
+</ul>
+<h2 id="reserved-environment-variables"><a class="header" href="#reserved-environment-variables">Reserved environment variables</a></h2>
+<p>There are a number of other <code>pg_config</code>-related environment variables that plrust sets.  These are not currently used,
+but are reserved for future use, should they become necessary to build a user function:</p>
+<ul>
+<li><code>PGX_PG_CONFIG_BINDIR</code></li>
+<li><code>PGX_PG_CONFIG_DOCDIR</code></li>
+<li><code>PGX_PG_CONFIG_HTMLDIR</code></li>
+<li><code>PGX_PG_CONFIG_INCLUDEDIR</code></li>
+<li><code>PGX_PG_CONFIG_PKGINCLUDEDIR</code></li>
+<li><code>PGX_PG_CONFIG_INCLUDEDIR-SERVER</code></li>
+<li><code>PGX_PG_CONFIG_LIBDIR</code></li>
+<li><code>PGX_PG_CONFIG_PKGLIBDIR</code></li>
+<li><code>PGX_PG_CONFIG_LOCALEDIR</code></li>
+<li><code>PGX_PG_CONFIG_MANDIR</code></li>
+<li><code>PGX_PG_CONFIG_SHAREDIR</code></li>
+<li><code>PGX_PG_CONFIG_SYSCONFDIR</code></li>
+<li><code>PGX_PG_CONFIG_PGXS</code></li>
+<li><code>PGX_PG_CONFIG_CONFIGURE</code></li>
+<li><code>PGX_PG_CONFIG_CC</code></li>
+<li><code>PGX_PG_CONFIG_CPPFLAGS</code></li>
+<li><code>PGX_PG_CONFIG_CFLAGS</code></li>
+<li><code>PGX_PG_CONFIG_CFLAGS_SL</code></li>
+<li><code>PGX_PG_CONFIG_LDFLAGS</code></li>
+<li><code>PGX_PG_CONFIG_LDFLAGS_EX</code></li>
+<li><code>PGX_PG_CONFIG_LDFLAGS_SL</code></li>
+<li><code>PGX_PG_CONFIG_LIBS</code></li>
+<li><code>PGX_PG_CONFIG_VERSION</code></li>
+</ul>
+<h2 id="influencing-plrust-compilation"><a class="header" href="#influencing-plrust-compilation">Influencing PL/Rust Compilation</a></h2>
+<p>If set, PL/Rust will use the <code>PLRUST_TRUSTED_PGX_OVERRIDE</code> environment variable when PL/Rust itself is being compiled.
+See the <a href="install-plrust.html">Choosing a different <code>plrust-trusted-pgx</code> dependency at compile time</a> section for details.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+    </body>
+</html>
